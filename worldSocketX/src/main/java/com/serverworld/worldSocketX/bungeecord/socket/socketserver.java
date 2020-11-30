@@ -1,0 +1,151 @@
+package com.serverworld.worldSocketX.bungeecord.socket;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.serverworld.worldSocket.bungeecord.events.MessagecomingEvent;
+import com.serverworld.worldSocket.bungeecord.worldSocket;
+import net.md_5.bungee.api.ChatColor;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class socketserver extends Thread {
+    static ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
+    private sender sender;
+    private static Set<String> names = new HashSet<>();
+    private static Set<PrintWriter> writers = new HashSet<>();
+    public static worldSocket worldsocket;
+
+    public socketserver(worldSocket worldSocket) {
+        worldsocket=worldSocket;
+    }
+
+    public void run() {
+        try (ServerSocket listener = new ServerSocket(worldsocket.config.port())) {
+            worldsocket.getLogger().info("starting socket server...");
+            worldsocket.getLogger().warning(ChatColor.YELLOW + "not using SSL");
+            worldsocket.getLogger().warning(ChatColor.YELLOW + "You should use SSL anyway, or it wont be encryption!");
+            worldsocket.getLogger().info("using port "+worldsocket.config.port());
+            ExecutorService pool = Executors.newFixedThreadPool(worldsocket.config.threads());
+            worldsocket.getLogger().info("using "+worldsocket.config.threads()+" threads");
+            while (true) {
+                pool.execute(new Handler(listener.accept()));
+            }
+        }catch (IOException e){
+
+        }
+    }
+
+    public void sendmessage(String message){
+        queue.add(message);
+        sender = new sender();
+        sender.start();
+    }
+
+    private class sender extends Thread {
+        public void run() {
+            try {
+                synchronized (queue) {
+                    if (!queue.isEmpty()) {
+                        for (String stuff : queue) {
+                            for (PrintWriter writer : writers) {
+                                writer.println(stuff);
+                            }
+                        }
+                        queue.clear();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private static class Handler implements Runnable {
+        private String loginmessage;
+        private String name;
+        private Socket socket;
+        private Scanner in;
+        private PrintWriter out;
+
+        public Handler(Socket socket) {
+            this.socket = socket;
+        }
+
+        @Override
+        public void run() {
+            try {
+                in = new Scanner(socket.getInputStream());
+                out = new PrintWriter(socket.getOutputStream(), true);
+                while (true) {
+                    loginmessage = in.nextLine();
+                    if (loginmessage == null) {
+                        return;
+                    }
+                    synchronized (names) {
+                        JsonParser jsonParser = new JsonParser();
+                        JsonObject jsonmsg = jsonParser.parse(loginmessage).getAsJsonObject();
+                        name = jsonmsg.get("name").getAsString();
+                        if (!names.contains(name)) {
+                            if (jsonmsg.get("password").getAsString().equals(worldsocket.config.password())){
+                                names.add(name);
+                                break;
+                            }else {
+                                out.println("ERROR:WRONG_PASSWORD");
+                                worldsocket.getLogger().warning(ChatColor.RED + "Warring: Some one try to login with wrong password!" + " IP: " + socket.getRemoteSocketAddress());
+                                worldsocket.getLogger().warning(ChatColor.RED + "You not using SSL. And your password isn't encryption!");
+                            }
+                        }else {
+                            out.println("ERROR:NAME_USED");
+                            worldsocket.getLogger().warning(ChatColor.YELLOW + "Opps! seem some one use the same name: " + name);
+                        }
+                    }
+                }
+                out.println("ACCEPTED");
+                worldsocket.getLogger().info("Socket join: " + name);
+                for (PrintWriter writer : writers) { }
+                writers.add(out);
+                //-------END---------
+                while (true) {
+                    String input = in.nextLine();
+                    if (input.toLowerCase().startsWith("leave")) {
+                        return;
+                    }
+                    JsonParser jsonParser = new JsonParser();
+                    JsonObject jsonmsg = jsonParser.parse(input).getAsJsonObject();
+                    if(!jsonmsg.get("receiver").getAsString().toLowerCase().equals("proxy")){
+                        if(worldsocket.config.debug()){
+                            worldsocket.getLogger().info(name + "send message: " + input);
+                            worldsocket.getLogger().info("sent to " + writers.size() + " clients");
+                        }
+                        for (PrintWriter writer : writers) {
+                            writer.println(input);
+                        }
+                    }
+                    worldsocket.getProxy().getPluginManager().callEvent(new MessagecomingEvent(input));
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            } finally {
+                if (out != null) {
+                    writers.remove(out);
+                }
+                if (name != null) {
+                    names.remove(name);
+                    worldsocket.getLogger().info("Socket quit: " + name);
+                }
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
+}
