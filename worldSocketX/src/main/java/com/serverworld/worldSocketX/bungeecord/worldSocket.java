@@ -20,8 +20,8 @@ public class worldSocket extends Plugin {
     public worldSocketXConfig config;
     private static worldSocket worldSocket;
 
-    public socketserver socketserver;
-    public SSLsocketserver SSLsocketserver;
+    //public socketserver socketserver;
+    private SSLsocketserver SSLsocketserver;
 
     @Override
     public void onEnable() {
