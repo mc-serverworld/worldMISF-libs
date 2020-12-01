@@ -11,9 +11,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 
 public class worldSocketX extends Plugin {
+    private static worldSocketX worldSocketX;
     private static Configuration configuration;
     @Override
     public void onEnable() {
+
+        worldSocketX = this;
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
 
@@ -32,4 +35,6 @@ public class worldSocketX extends Plugin {
             e.printStackTrace();
         }
     }
+
+    public static worldSocketX getInstance(){return worldSocketX;}
 }
