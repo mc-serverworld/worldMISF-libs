@@ -1,6 +1,7 @@
 package com.serverworld.worldSocketX.waterfall;
 
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
@@ -10,7 +11,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 
 public class worldSocketX extends Plugin {
-
+    private static Configuration configuration;
     @Override
     public void onEnable() {
         if (!getDataFolder().exists())

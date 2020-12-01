@@ -1,0 +1,33 @@
+# worldSocketX
+# Version: ${project.version}
+# Gitgub: https://github.com/mc-serverworld/worldMISF-libs
+
+configinfo:
+  api-version: 1
+  debug: false
+
+general:
+  port: 18964
+  password: "aba9cfde1fd706a0c83f373cd1c10e5f11faaa765e2229f9723f6f9b33e3506037820a9a0f1ed111d220e022b7a70c8ff88cb15e9db4905a0fbc5128335302fa"
+
+socketserver:
+  threads: 100
+
+client:
+  uuid: ""
+  name: "server"
+  host: "127.0.0.1"
+  check-rate: 60
+  #rate to check connection, use tick (20tick = 1sec)
+
+SSL:
+  server:
+    keyStore_file: "D:\\certificates\\minecraft\\kserver.keystore"
+    trustStore_file: "D:\\certificates\\minecraft\\tserver.keystore"
+    keyStorePassword: "password"
+    trustStorePassword: "password"
+  client:
+    keyStore_file: "D:\\certificates\\minecraft\\kclient.keystore"
+    trustStore_file: "D:\\certificates\\minecraft\\tclient.keystore"
+    keyStorePassword: "password"
+    trustStorePassword: "password"
