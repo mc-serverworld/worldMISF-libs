@@ -1,0 +1,6 @@
+main: com.serverworld.worlduserdata.paper.PaperworldUserData
+name: ${project.name}
+version: ${project.version}
+author: mc-serverworld
+website: mc-serverworld.com
+softdepend: [PlaceholderAPI]

@@ -1,0 +1,15 @@
+main: com.serverworld.worlduserdata.bungeecord.BungeeworldUserData
+name: ${project.name}
+version: ${project.version}
+author: mc-serverworld
+website: mc-serverworld.com
+depend: [worldIdiot,ServerListPlus]
+
+commands:
+  worlduserprofile:
+    permission: worlduserprofile.admin
+    permission-message: You do not have permission!
+    aliases: [wofile]
+permissions:
+  worlduserprofile.admin:
+    default: op

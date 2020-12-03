@@ -1,0 +1,16 @@
+# ${project.name}
+# Version: ${project.version}
+# Gitgub: https://github.com/mc-serverworld/worldMISF
+
+configinfo:
+  api-version: 1
+  debug: false
+
+database:
+  # mariadb mysql
+  type: mariadb
+  host: 127.0.0.1
+  port: 3306
+  database: worldmisf_worlduserprofile
+  username: root
+  password: open
