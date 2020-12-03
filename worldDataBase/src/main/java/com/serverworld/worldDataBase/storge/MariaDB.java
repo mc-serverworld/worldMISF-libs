@@ -18,10 +18,11 @@
  *  
  */
 
-package com.serverworld.worldDataBase.paper;
+package com.serverworld.worldDataBase.storge;
 
-import com.serverworld.worldDataBase.config.worldDataBaseConfig;
-import com.serverworld.worldDataBase.paper.utils.DebugMessage;
+import com.serverworld.worldDataBase.bungeecord.BungeeworldUserData;
+import com.serverworld.worldDataBase.bungeecord.BungeeworldUserDataConfig;
+import com.serverworld.worldDataBase.bungeecord.uitls.DebugMessage;
 import net.md_5.bungee.api.ChatColor;
 
 import java.sql.Connection;
@@ -29,17 +30,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class PaperSQLDatabase {
-    private PaperworldUserData paperworldUserData;
-    private PaperworldUserDataConfig config;
+public class MariaDB {
 
     public static Connection connection;
-    private static String host, database, username, password;
-    private static int port;
+    private String host, database, username, password,set;
+    private int port;
 
-    public PaperSQLDatabase(PaperworldUserData paperworldUserData){
-        this.paperworldUserData = paperworldUserData;
-        config = paperworldUserData.config;
+    public BungeeSQLDatabase(BungeeworldUserData bungeeworldUserData){
+        this.bungeeworldUserData = bungeeworldUserData;
+        config = bungeeworldUserData.config;
         if(config.type().toLowerCase().equals("mysql")){
             DebugMessage.sendInfo("Using mysql");
             MYSQLlogin();
@@ -53,11 +52,12 @@ public class PaperSQLDatabase {
     }
 
     public void MYSQLlogin(){
-        host = worldDataBaseConfig.getHost();
-        port = worldDataBaseConfig.getPort();
-        database = worldDataBaseConfig.getDataBase();
-        username = worldDataBaseConfig.getUserName();
-        password = worldDataBaseConfig.getPassword();
+        host = config.host();
+        port = config.port();
+        database = config.database();
+        username = config.username();
+        password = config.password();
+        set="";
 
         try {
             MYSQLopenConnection();
@@ -71,7 +71,7 @@ public class PaperSQLDatabase {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS `worlduserdata_ServerResidenceData` ( `id` BIGINT NOT NULL AUTO_INCREMENT , `ResidenceName` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL , `CreateTime` BIGINT NOT NULL , `ResidenceData` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL , `OwnerUUID` VARCHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL , `Version` INT NOT NULL , PRIMARY KEY (`id`), INDEX (`ResidenceName`), INDEX (`CreateTime`), INDEX (`OwnerUUID`)) ENGINE = InnoDB;");
 
             statement.executeUpdate("ALTER TABLE `worlduserdata_userphoenixplayerdata` ADD COLUMN IF NOT EXISTS `playerhome` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `playerdata`;");
-            //statement.executeUpdate("CREATE TABLE IF NOT EXISTS `worldprofile_userlastlocation` (`PlayerUUID` char(36), `Server` varchar(8), PRIMARY KEY(PlayerUUID),INDEX (Lang))");
+
         }catch (Exception e){
             e.printStackTrace();
             DebugMessage.sendWarring(ChatColor.RED + "Error while connection to database");
@@ -96,16 +96,18 @@ public class PaperSQLDatabase {
                 return;
             }
             Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database+"?autoReconnect=true&characterEncoding=utf-8", username, password);
+            connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database+"?" + set, this.username, this.password);
         }
     }
 
     public static Connection getConnection(){
-        try{
+        try {
             if (connection != null && !connection.isClosed()) {
                 return connection;
             }
-            connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database+"?autoReconnect=true&characterEncoding=utf-8", username, password);
+            Class.forName("com.mysql.jdbc.Driver");
+            BungeeworldUserDataConfig config = BungeeworldUserData.config;
+            connection = DriverManager.getConnection("jdbc:mysql://" + config.host() + ":" + "/" + config.database()+"?"+ //TODO set, config.username(), config.password());
             return connection;
         }catch (Exception e){
             e.printStackTrace();
@@ -113,4 +115,6 @@ public class PaperSQLDatabase {
         }
 
     }
+
+
 }

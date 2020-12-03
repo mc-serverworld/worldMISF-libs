@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class UserPhoenixPlayerDataInquirer {
-    
+
     public static boolean setUp(UUID uuid){
         try {
             if(joinbefore(uuid)) {
