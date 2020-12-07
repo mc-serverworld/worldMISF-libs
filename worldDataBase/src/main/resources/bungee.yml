@@ -1,4 +1,4 @@
-main: com.serverworld.worlduserdata.bungeecord.BungeeworldUserData
+main: com.serverworld.worldDataBase.waterfall.WaterFallworldDataBase
 name: ${project.name}
 version: ${project.version}
 author: mc-serverworld

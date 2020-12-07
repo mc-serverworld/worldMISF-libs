@@ -18,11 +18,12 @@
  *  
  */
 
-package com.serverworld.worldDataBase.bungeecord.Listeners;
+package com.serverworld.worldDataBase.waterfall.Listeners;
 
+import com.serverworld.worldDataBase.waterfall.WaterFallworldDataBase;
 import com.serverworld.worldIdiot.api.BanQueryAPI;
 import com.serverworld.worldDataBase.bungeecord.BungeeworldUserData;
-import com.serverworld.worldDataBase.bungeecord.uitls.DebugMessage;
+import com.serverworld.worldDataBase.waterfall.uitls.DebugMessage;
 import com.serverworld.worldDataBase.jsondata.UserAccountData;
 import com.serverworld.worldDataBase.api.query.UserAccountDataInquirer;
 import com.serverworld.worldDataBase.api.query.UserPhoenixPlayerDataInquirer;
@@ -43,10 +44,10 @@ import java.util.concurrent.TimeUnit;
 
 
 public class PlayerLogin implements Listener {
-    private final BungeeworldUserData bungeeworldUserData;
-    public PlayerLogin(Plugin plugin, BungeeworldUserData bungeeworldUserData) {
+    private final WaterFallworldDataBase waterFallworldDataBase;
+    public PlayerLogin(Plugin plugin, WaterFallworldDataBase WaterFallworldDataBase) {
         ProxyServer.getInstance().getPluginManager().registerListener(plugin, this);
-        this.bungeeworldUserData = bungeeworldUserData;
+        this.waterFallworldDataBase = WaterFallworldDataBase;
     }
 
     @EventHandler
@@ -103,7 +104,7 @@ public class PlayerLogin implements Listener {
                 try {
                     if(support_country_list.contains(jsonObject.getString("country").toLowerCase())){
                         //support
-                        bungeeworldUserData.getProxy().getScheduler().schedule(bungeeworldUserData, new Runnable() {
+                        WaterFallworldDataBase.getInstance().getProxy().getScheduler().schedule(WaterFallworldDataBase.getInstance(), new Runnable() {
                             public void run() {
                                 ProxyServer.getInstance().createTitle()
                                         .title(new ComponentBuilder("歡迎來到mc-serverworld")
@@ -118,7 +119,7 @@ public class PlayerLogin implements Listener {
                         }, 5, 5, TimeUnit.SECONDS);
                     }else {
                         //unsupport
-                        bungeeworldUserData.getProxy().getScheduler().schedule(bungeeworldUserData, new Runnable() {
+                        WaterFallworldDataBase.getInstance().getProxy().getScheduler().schedule(WaterFallworldDataBase.getInstance(), new Runnable() {
                             public void run() {
                                 ProxyServer.getInstance().createTitle()
                                         .title(new ComponentBuilder("Wellcome to mc-serverworld")
@@ -135,7 +136,7 @@ public class PlayerLogin implements Listener {
                     }
                 }catch (Exception e) {
                     //unsupport
-                    bungeeworldUserData.getProxy().getScheduler().schedule(bungeeworldUserData, new Runnable() {
+                    WaterFallworldDataBase.getInstance().getProxy().getScheduler().schedule(WaterFallworldDataBase.getInstance(), new Runnable() {
                         public void run() {
                             ProxyServer.getInstance().createTitle()
                                     .title(new ComponentBuilder("Wellcome to mc-serverworld")

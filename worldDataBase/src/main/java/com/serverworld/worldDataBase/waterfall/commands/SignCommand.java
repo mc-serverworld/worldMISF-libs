@@ -18,10 +18,10 @@
  *  
  */
 
-package com.serverworld.worldDataBase.bungeecord.commands;
+package com.serverworld.worldDataBase.waterfall.commands;
 
-import com.serverworld.worldDataBase.bungeecord.BungeeworldUserData;
-import com.serverworld.worldDataBase.bungeecord.uitls.DebugMessage;
+import com.serverworld.worldDataBase.waterfall.WaterFallworldDataBase;
+import com.serverworld.worldDataBase.waterfall.uitls.DebugMessage;
 import com.serverworld.worldDataBase.jsondata.UserAccountData;
 import com.serverworld.worldDataBase.api.query.UserAccountDataInquirer;
 import com.serverworld.worldDataBase.utils.IPAPI;
@@ -119,7 +119,7 @@ public class SignCommand extends Command {
                 agreement.addExtra(ButtonNOComponent);
                 commandSender.sendMessage(agreement);
                 players.add(commandSender);
-                BungeeworldUserData.getInstance().getProxy().getScheduler().schedule(BungeeworldUserData.getInstance(), new Runnable() {
+                WaterFallworldDataBase.getInstance().getProxy().getScheduler().schedule(WaterFallworldDataBase.getInstance(), new Runnable() {
                     public void run() {
                         players.remove(commandSender);
                     }

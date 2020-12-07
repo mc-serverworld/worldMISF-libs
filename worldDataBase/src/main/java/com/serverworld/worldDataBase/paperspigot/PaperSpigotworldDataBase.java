@@ -20,48 +20,71 @@
 
 package com.serverworld.worldDataBase.paperspigot;
 
-import com.serverworld.worldDataBase.paper.PaperSQLDatabase;
-import com.serverworld.worldDataBase.paper.PaperworldUserDataConfig;
+import com.serverworld.worldDataBase.config.worldDataBaseConfig;
 import com.serverworld.worldDataBase.api.query.ConnectionManager;
 import com.serverworld.worldDataBase.api.query.ServerResidenceInquirer;
+import com.serverworld.worldDataBase.paperspigot.utils.DebugMessage;
+import com.serverworld.worldDataBase.storge.MariaDB;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class PaperSpigotworldDataBase extends JavaPlugin {
-    private static PaperSpigotworldDataBase paperworldUserData;
-    public static PaperworldUserDataConfig config;
+    private static PaperSpigotworldDataBase paperSpigotworldDataBase;
 
     @Override
     public void onLoad() {
-        config = new PaperworldUserDataConfig(this);
-        config.loadDefConfig();
-        paperworldUserData = this;
+        paperSpigotworldDataBase = this;
+        LoadConfig();
         setSQL();
     }
 
     @Override
     public void onEnable() {
         syncConnection();
-        //setup
-        //setSQL();
-
     }
 
     public void setSQL(){
-        PaperSQLDatabase paperSQLDatabase = new PaperSQLDatabase(this);
+        switch (worldDataBaseConfig.getDataBaseType().toLowerCase()){
+            default:
+                DebugMessage.sendInfo(ChatColor.RED + "Not supported this database type");
+            case "mariadb": {
+                DebugMessage.sendInfo(ChatColor.YELLOW + "Using mariadb");
+                MariaDB mariaDB = new MariaDB();
+            }
+        }
     }
 
     public void syncConnection() {
         PaperSpigotworldDataBase.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(PaperSpigotworldDataBase.getInstance(), new Runnable() {
             @Override
             public void run() {
-                ConnectionManager.setConnection(PaperSQLDatabase.getConnection());
-
+                switch (worldDataBaseConfig.getDataBaseType().toLowerCase()){
+                    default:
+                       return;
+                    case "mariadb": ConnectionManager.setConnection(MariaDB.getConnection());
+                }
                 ServerResidenceInquirer.isExist("check connection");
             }
         }, 60L, 300*20);
     }
 
     public static PaperSpigotworldDataBase getInstance(){
-        return paperworldUserData;
+        return paperSpigotworldDataBase;
+    }
+
+    public void LoadConfig(){
+        saveDefaultConfig();
+        reloadConfig();
+
+        worldDataBaseConfig.setApiVersion(getConfig().getInt("configinfo.api-version"));
+        worldDataBaseConfig.setDebug(getConfig().getBoolean("configinfo.debug"));
+
+        worldDataBaseConfig.setSet(getConfig().getString("database.set"));
+        worldDataBaseConfig.setDataBaseType(getConfig().getString("database.type"));
+        worldDataBaseConfig.setHost(getConfig().getString("database.host"));
+        worldDataBaseConfig.setPort(getConfig().getInt("database.port"));
+        worldDataBaseConfig.setDataBase(getConfig().getString("database.database"));
+        worldDataBaseConfig.setUserName(getConfig().getString("database.username"));
+        worldDataBaseConfig.setPassword(getConfig().getString("database.password"));
     }
 }

@@ -14,4 +14,5 @@ public class worldDataBaseConfig {
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String DataBase;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String UserName;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String Password;
+    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String Set;
 }

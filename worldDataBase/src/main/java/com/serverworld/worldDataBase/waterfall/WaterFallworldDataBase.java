@@ -18,12 +18,16 @@
  *  
  */
 
-package com.serverworld.worldDataBase.bungeecord;
+package com.serverworld.worldDataBase.waterfall;
 
-import com.serverworld.worldDataBase.bungeecord.Listeners.PlayerLogin;
-import com.serverworld.worldDataBase.bungeecord.commands.SignCommand;
 import com.serverworld.worldDataBase.api.query.ConnectionManager;
 import com.serverworld.worldDataBase.api.query.ServerResidenceInquirer;
+import com.serverworld.worldDataBase.storge.MariaDB;
+import com.serverworld.worldDataBase.waterfall.Listeners.PlayerLogin;
+import com.serverworld.worldDataBase.waterfall.commands.SignCommand;
+import com.serverworld.worldDataBase.config.worldDataBaseConfig;
+import com.serverworld.worldDataBase.waterfall.uitls.DebugMessage;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -36,29 +40,22 @@ import java.nio.file.Files;
 import java.sql.Connection;
 import java.util.concurrent.TimeUnit;
 
-public class BungeeworldUserData extends Plugin {
+public class WaterFallworldDataBase extends Plugin {
 
     private File file;
-    public static BungeeworldUserDataConfig config;
-    private BungeeSQLDatabase database;
     public static Configuration configuration;
     public static Connection connection;
-    private static BungeeworldUserData bungeeworldUserData;
+    private static WaterFallworldDataBase waterFallworldDataBase;
     @Override
     public void onEnable() {
-        setupconfig();
-        bungeeworldUserData = this;
-        database = new BungeeSQLDatabase(this);
-        connection = database.connection;
+        LoadConfig();
+        waterFallworldDataBase = this;
         new PlayerLogin(this,this);
-        getLogger().info("Yay! It loads!");
-        getLogger().info("Helloworld");
-
         getProxy().getPluginManager().registerCommand(this,new SignCommand(this));
         syncConnection();
     }
 
-    public void setupconfig(){
+    public void LoadConfig(){
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
 
@@ -76,21 +73,48 @@ public class BungeeworldUserData extends Plugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        config = new BungeeworldUserDataConfig(this);
+
+        worldDataBaseConfig.setApiVersion(configuration.getInt("configinfo.api-version"));
+        worldDataBaseConfig.setDebug(configuration.getBoolean("configinfo.debug"));
+        worldDataBaseConfig.setDataBaseType(configuration.getString("database.type"));
+        worldDataBaseConfig.setHost(configuration.getString("database.host"));
+        worldDataBaseConfig.setPort(configuration.getInt("database.port"));
+        worldDataBaseConfig.setDataBase(configuration.getString("database.database"));
+        worldDataBaseConfig.setUserName(configuration.getString("database.username"));
+        worldDataBaseConfig.setPassword(configuration.getString("database.password"));
+    }
+
+    public void setSQL(){
+        switch (worldDataBaseConfig.getDataBaseType().toLowerCase()){
+            default:
+                DebugMessage.sendInfo(ChatColor.RED + "Not supported this database type");
+            case "mariadb": {
+                DebugMessage.sendInfo(ChatColor.YELLOW + "Using mariadb");
+                MariaDB mariaDB = new MariaDB();
+            }
+        }
     }
 
     public void syncConnection() {
-        BungeeworldUserData.getInstance().getProxy().getScheduler().schedule(BungeeworldUserData.getInstance(), new Runnable() {
+        WaterFallworldDataBase.getInstance().getProxy().getScheduler().schedule(WaterFallworldDataBase.getInstance(), new Runnable() {
             @Override
             public void run() {
-                ConnectionManager.setConnection(BungeeSQLDatabase.getConnection());
-
+                switch (worldDataBaseConfig.getDataBaseType().toLowerCase()){
+                    default:{
+                        DebugMessage.sendInfo(ChatColor.RED + "Not supported this database type");
+                        return;
+                    }
+                    case "mariadb": {
+                        DebugMessage.sendInfo(ChatColor.YELLOW + "Using mariadb");
+                        ConnectionManager.setConnection(MariaDB.getConnection());
+                    }
+                }
                 ServerResidenceInquirer.isExist("check connection");
             }
         }, 0, 5, TimeUnit.MINUTES);
     }
 
-    public static BungeeworldUserData getInstance(){
-        return bungeeworldUserData;
+    public static WaterFallworldDataBase getInstance(){
+        return waterFallworldDataBase;
     }
 }

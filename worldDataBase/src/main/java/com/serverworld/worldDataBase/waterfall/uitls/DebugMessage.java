@@ -18,26 +18,25 @@
  *  
  */
 
-package com.serverworld.worldDataBase.paper.utils;
+package com.serverworld.worldDataBase.waterfall.uitls;
 
-import com.serverworld.worldDataBase.paper.PaperworldUserData;
-
+import com.serverworld.worldDataBase.config.worldDataBaseConfig;
+import com.serverworld.worldDataBase.waterfall.WaterFallworldDataBase;
 public class DebugMessage {
 
     public static void sendInfo(String msg){
-        PaperworldUserData.getInstance().getLogger().info(msg);
+        WaterFallworldDataBase.getInstance().getLogger().info(msg);
     }
     public static void sendWarring(String msg){
-        PaperworldUserData.getInstance().getLogger().warning(msg);
+        WaterFallworldDataBase.getInstance().getLogger().warning(msg);
     }
     public static void sendInfoIfDebug(String msg){
-        if(PaperworldUserData.config.debug())
-            PaperworldUserData.getInstance().getLogger().info(msg);
+        if(worldDataBaseConfig.isDebug())
+            WaterFallworldDataBase.getInstance().getLogger().info(msg);
 
     }
     public static void sendWarringIfDebug(String msg){
-        if(PaperworldUserData.config.debug())
-            PaperworldUserData.getInstance().getLogger().warning(msg);
-
+        if(worldDataBaseConfig.isDebug())
+            WaterFallworldDataBase.getInstance().getLogger().warning(msg);
     }
 }

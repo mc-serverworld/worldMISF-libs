@@ -1,4 +1,4 @@
-main: com.serverworld.worlduserdata.paper.PaperworldUserData
+main: com.serverworld.worldDataBase.paperspigot.PaperSpigotworldDataBase
 name: ${project.name}
 version: ${project.version}
 author: mc-serverworld

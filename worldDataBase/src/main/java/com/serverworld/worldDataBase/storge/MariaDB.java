@@ -22,17 +22,12 @@ package com.serverworld.worldDataBase.storge;
 
 import com.diogonunes.jcolor.Ansi;
 import com.diogonunes.jcolor.Attribute;
-import com.serverworld.worldDataBase.bungeecord.BungeeworldUserData;
-import com.serverworld.worldDataBase.bungeecord.BungeeworldUserDataConfig;
-import com.serverworld.worldDataBase.bungeecord.uitls.DebugMessage;
 import com.serverworld.worldDataBase.config.worldDataBaseConfig;
-import net.md_5.bungee.api.ChatColor;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Locale;
 
 public class MariaDB {
 
@@ -40,22 +35,17 @@ public class MariaDB {
     private static String host, database, username, password,set;
     private int port;
 
-    public MariaDB(BungeeworldUserData bungeeworldUserData){
-        switch (worldDataBaseConfig.getDataBaseType().toLowerCase()){
-            default: System.out.println(Ansi.colorize("Not supported this database type",Attribute.RED_TEXT()));
-            case "mariadb": System.out.println(Ansi.colorize("Using mariadb",Attribute.YELLOW_TEXT()));
-        }
-
+    public MariaDB(){
+        host = worldDataBaseConfig.getHost();
+        database = worldDataBaseConfig.getDataBase();
+        username = worldDataBaseConfig.getUserName();
+        password = worldDataBaseConfig.getPassword();
+        port = worldDataBaseConfig.getPort();
+        set = worldDataBaseConfig.getSet();
+        MariaDBLogin();
     }
 
-    public void MariaDBlogin(){
-        host = config.host();
-        port = config.port();
-        database = config.database();
-        username = config.username();
-        password = config.password();
-        set="";
-
+    public void MariaDBLogin(){
         try {
             MariaDBLopenConnection();
             Statement statement = connection.createStatement();
@@ -70,7 +60,7 @@ public class MariaDB {
             statement.executeUpdate("ALTER TABLE `worlduserdata_userphoenixplayerdata` ADD COLUMN IF NOT EXISTS `playerhome` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `playerdata`;");
         }catch (Exception e){
             e.printStackTrace();
-            DebugMessage.sendWarring(ChatColor.RED + "Error while connection to database");
+            System.out.println(Ansi.colorize("Error while connection to database",Attribute.RED_TEXT()));
         }
         try {
             if(MariaDBLopenConnection())
@@ -84,7 +74,6 @@ public class MariaDB {
 
     public boolean MariaDBLopenConnection() throws SQLException, ClassNotFoundException {
         if (connection != null && !connection.isClosed()) {
-            DebugMessage.sendInfo(ChatColor.GREEN + "Connected to database!");
             return true;
         }
 
@@ -93,8 +82,9 @@ public class MariaDB {
                 return true;
             }
             Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database+"?" + set, this.username, this.password);
+            connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database+"?" + set, username, password);
         }
+        return false;
     }
 
     public static Connection getConnection(){
@@ -103,7 +93,6 @@ public class MariaDB {
                 return connection;
             }
             Class.forName("com.mysql.jdbc.Driver");
-            BungeeworldUserDataConfig config = BungeeworldUserData.config;
             connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + "/" + database+ "?" + set, username, password);
             return connection;
         }catch (Exception e){

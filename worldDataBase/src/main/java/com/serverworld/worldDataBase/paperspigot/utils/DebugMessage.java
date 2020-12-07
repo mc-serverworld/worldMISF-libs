@@ -18,26 +18,23 @@
  *  
  */
 
-package com.serverworld.worldDataBase.bungeecord.uitls;
+package com.serverworld.worldDataBase.paperspigot.utils;
 
-import com.serverworld.worldDataBase.bungeecord.BungeeworldUserData;
+import com.serverworld.worldDataBase.config.worldDataBaseConfig;
+import com.serverworld.worldDataBase.paperspigot.PaperSpigotworldDataBase;
 
 public class DebugMessage {
 
     public static void sendInfo(String msg){
-        BungeeworldUserData.getInstance().getLogger().info(msg);
+        PaperSpigotworldDataBase.getInstance().getLogger().info(msg);
     }
-    public static void sendWarring(String msg){
-        BungeeworldUserData.getInstance().getLogger().warning(msg);
-    }
+    public static void sendWarring(String msg){ PaperSpigotworldDataBase.getInstance().getLogger().warning(msg); }
     public static void sendInfoIfDebug(String msg){
-        if(BungeeworldUserData.config.debug())
-            BungeeworldUserData.getInstance().getLogger().info(msg);
-
+        if(worldDataBaseConfig.isDebug())
+            PaperSpigotworldDataBase.getInstance().getLogger().info(msg);
     }
     public static void sendWarringIfDebug(String msg){
-        if(BungeeworldUserData.config.debug())
-            BungeeworldUserData.getInstance().getLogger().warning(msg);
-
+        if(worldDataBaseConfig.isDebug())
+            PaperSpigotworldDataBase.getInstance().getLogger().warning(msg);
     }
 }
