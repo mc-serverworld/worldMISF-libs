@@ -20,38 +20,35 @@
 
 package com.serverworld.worldDataBase.storge;
 
+import com.diogonunes.jcolor.Ansi;
+import com.diogonunes.jcolor.Attribute;
 import com.serverworld.worldDataBase.bungeecord.BungeeworldUserData;
 import com.serverworld.worldDataBase.bungeecord.BungeeworldUserDataConfig;
 import com.serverworld.worldDataBase.bungeecord.uitls.DebugMessage;
+import com.serverworld.worldDataBase.config.worldDataBaseConfig;
 import net.md_5.bungee.api.ChatColor;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
 
 public class MariaDB {
 
     public static Connection connection;
-    private String host, database, username, password,set;
+    private static String host, database, username, password,set;
     private int port;
 
-    public BungeeSQLDatabase(BungeeworldUserData bungeeworldUserData){
-        this.bungeeworldUserData = bungeeworldUserData;
-        config = bungeeworldUserData.config;
-        if(config.type().toLowerCase().equals("mysql")){
-            DebugMessage.sendInfo("Using mysql");
-            MYSQLlogin();
-        }else if(config.type().toLowerCase().equals("mariadb")){
-            DebugMessage.sendInfo("Using mariadb");
-            MYSQLlogin();
-        }else {
-            DebugMessage.sendWarring(ChatColor.RED + "Not supported this database type");
+    public MariaDB(BungeeworldUserData bungeeworldUserData){
+        switch (worldDataBaseConfig.getDataBaseType().toLowerCase()){
+            default: System.out.println(Ansi.colorize("Not supported this database type",Attribute.RED_TEXT()));
+            case "mariadb": System.out.println(Ansi.colorize("Using mariadb",Attribute.YELLOW_TEXT()));
         }
 
     }
 
-    public void MYSQLlogin(){
+    public void MariaDBlogin(){
         host = config.host();
         port = config.port();
         database = config.database();
@@ -60,7 +57,7 @@ public class MariaDB {
         set="";
 
         try {
-            MYSQLopenConnection();
+            MariaDBLopenConnection();
             Statement statement = connection.createStatement();
             //create database
             //useraccountdata
@@ -71,13 +68,13 @@ public class MariaDB {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS `worlduserdata_ServerResidenceData` ( `id` BIGINT NOT NULL AUTO_INCREMENT , `ResidenceName` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL , `CreateTime` BIGINT NOT NULL , `ResidenceData` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL , `OwnerUUID` VARCHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL , `Version` INT NOT NULL , PRIMARY KEY (`id`), INDEX (`ResidenceName`), INDEX (`CreateTime`), INDEX (`OwnerUUID`)) ENGINE = InnoDB;");
 
             statement.executeUpdate("ALTER TABLE `worlduserdata_userphoenixplayerdata` ADD COLUMN IF NOT EXISTS `playerhome` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `playerdata`;");
-
         }catch (Exception e){
             e.printStackTrace();
             DebugMessage.sendWarring(ChatColor.RED + "Error while connection to database");
         }
         try {
-            MYSQLopenConnection();
+            if(MariaDBLopenConnection())
+                System.out.println(Ansi.colorize("Connected to database!", Attribute.GREEN_TEXT()));
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -85,15 +82,15 @@ public class MariaDB {
         }
     }
 
-    public void MYSQLopenConnection() throws SQLException, ClassNotFoundException {
+    public boolean MariaDBLopenConnection() throws SQLException, ClassNotFoundException {
         if (connection != null && !connection.isClosed()) {
             DebugMessage.sendInfo(ChatColor.GREEN + "Connected to database!");
-            return;
+            return true;
         }
 
         synchronized (this) {
             if (connection != null && !connection.isClosed()) {
-                return;
+                return true;
             }
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database+"?" + set, this.username, this.password);
@@ -107,7 +104,7 @@ public class MariaDB {
             }
             Class.forName("com.mysql.jdbc.Driver");
             BungeeworldUserDataConfig config = BungeeworldUserData.config;
-            connection = DriverManager.getConnection("jdbc:mysql://" + config.host() + ":" + "/" + config.database()+"?"+ //TODO set, config.username(), config.password());
+            connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + "/" + database+ "?" + set, username, password);
             return connection;
         }catch (Exception e){
             e.printStackTrace();

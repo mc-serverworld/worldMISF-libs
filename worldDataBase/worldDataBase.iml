@@ -51,5 +51,8 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.mc-serverworld:worldIdiot:3.2.0-release" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.bstats:bstats-bungeecord:1.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.12" level="project" />
+    <orderEntry type="library" name="Maven: com.diogonunes:JColor:5.0.1" level="project" />
+    <orderEntry type="library" name="Maven: net.java.dev.jna:jna:5.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.java.dev.jna:jna-platform:5.5.0" level="project" />
   </component>
 </module>
