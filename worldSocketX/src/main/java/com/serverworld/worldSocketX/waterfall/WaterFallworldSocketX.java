@@ -10,13 +10,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 
-public class worldSocketX extends Plugin {
-    private static worldSocketX worldSocketX;
+public class WaterFallworldSocketX extends Plugin {
+    private static WaterFallworldSocketX waterFallworldSocketX;
     private static Configuration configuration;
     @Override
     public void onEnable() {
+        waterFallworldSocketX = this;
 
-        worldSocketX = this;
+    }
+
+    public void LoadConfig(){
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
 
@@ -34,7 +37,8 @@ public class worldSocketX extends Plugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
-    public static worldSocketX getInstance(){return worldSocketX;}
+    public static WaterFallworldSocketX getInstance(){return waterFallworldSocketX;}
 }
