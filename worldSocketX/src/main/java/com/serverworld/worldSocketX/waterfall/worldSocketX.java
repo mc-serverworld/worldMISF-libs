@@ -1,6 +1,5 @@
 package com.serverworld.worldSocketX.waterfall;
 
-import com.serverworld.worldSocketX.config.worldSocketXconfig;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
