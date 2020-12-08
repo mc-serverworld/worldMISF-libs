@@ -12,31 +12,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.KeyStore;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SSLSocketServer extends Thread {
-    static ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
+    static ConcurrentLinkedQueue<String> MessagesQueue = new ConcurrentLinkedQueue<String>();
+    private static Set<ClientObject> Clients = new HashSet<>();
     private sender sender;
-    private static Set<String> names = new HashSet<>();
-    private static Set<PrintWriter> writers = new HashSet<>();
-    //public static worldSocket worldsocket;
-
-    private SSLContext ctx;
-    private KeyManagerFactory kmf;
-    private TrustManagerFactory tmf;
-    private KeyStore ks;
-    private KeyStore tks;
-
-
-    private String SERVER_KEY_STORE_FILE;
-    private String SERVER_TRUST_KEY_STORE_FILE;
-    private String SERVER_KEY_STORE_PASSWORD;
-    private String SERVER_TRUST_KEY_STORE_PASSWORD;
+    //private static Set<String> names = new HashSet<>();
+    //private static Set<PrintWriter> writers = new HashSet<>();
 
     public SSLSocketServer() {
 
@@ -89,7 +75,7 @@ public class SSLSocketServer extends Thread {
     }
 
     private static class Handler implements Runnable {
-        private String loginmessage;
+        private String LoginMessage;
         private String name;
         private SSLSocket socket;
         private Scanner in;
@@ -105,13 +91,13 @@ public class SSLSocketServer extends Thread {
                 in = new Scanner(socket.getInputStream());
                 out = new PrintWriter(socket.getOutputStream(), true);
                 while (true) {
-                    loginmessage = in.nextLine();
-                    if (loginmessage == null) {
+                    LoginMessage = in.nextLine();
+                    if (LoginMessage == null)
                         return;
-                    }
-                    synchronized (names) {
+                    synchronized (Clients) {
+
                         JsonParser jsonParser = new JsonParser();
-                        JsonObject jsonmsg = jsonParser.parse(loginmessage).getAsJsonObject();
+                        JsonObject jsonmsg = jsonParser.parse(LoginMessage).getAsJsonObject();
                         name = jsonmsg.get("name").getAsString();
                         if (!names.contains(name)) {
                             if (jsonmsg.get("password").getAsString().equals(worldSocket.getInstance().config.password())){
@@ -142,7 +128,7 @@ public class SSLSocketServer extends Thread {
                     }
                     if (input.toUpperCase().equals("CONNECTCHECK")){
                         out.println("CHECK:ONLINE");
-                        if(worldSocket.getInstance().config.debug())
+                        if(worldSocketXConfig.isDebug())
                             worldSocket.getInstance().getLogger().info(name + " checking connection");
 
                     }else {
