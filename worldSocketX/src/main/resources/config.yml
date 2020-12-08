@@ -15,7 +15,7 @@ socketserver:
 
 client:
   uuid: ""
-  name: "server"
+  #dont touch UUID
   host: "127.0.0.1"
   check-rate: 60
   #rate to check connection, use tick (20tick = 1sec)

@@ -1,9 +1,10 @@
 package com.serverworld.worldSocketX.socket;
 
+import com.diogonunes.jcolor.Ansi;
+import com.diogonunes.jcolor.Attribute;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.serverworld.worldSocket.bungeecord.events.MessagecomingEvent;
-import com.serverworld.worldSocket.bungeecord.worldSocket;
+import com.serverworld.worldSocketX.config.worldSocketXConfig;
 import net.md_5.bungee.api.ChatColor;
 
 import javax.net.ssl.*;
@@ -18,7 +19,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ServerSocketServer extends Thread {
+public class SSLSocketServer extends Thread {
     static ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
     private sender sender;
     private static Set<String> names = new HashSet<>();
@@ -37,44 +38,23 @@ public class ServerSocketServer extends Thread {
     private String SERVER_KEY_STORE_PASSWORD;
     private String SERVER_TRUST_KEY_STORE_PASSWORD;
 
-    public ServerSocketServer(worldSocket worldSocket) {
-        //worldsocket=worldSocket;
+    public SSLSocketServer() {
+
     }
 
     public void run() {
         try{
-            SERVER_KEY_STORE_FILE = worldSocket.getInstance().config.server_keyStore_file();
-            SERVER_TRUST_KEY_STORE_FILE = worldSocket.getInstance().config.server_trustStore_file();
-            SERVER_KEY_STORE_PASSWORD = worldSocket.getInstance().config.server_keyStore_password();
-            SERVER_TRUST_KEY_STORE_PASSWORD = worldSocket.getInstance().config.server_trustStore_password();
-            ctx = SSLContext.getInstance("SSL");
-
-            kmf = KeyManagerFactory.getInstance("SunX509");
-            tmf = TrustManagerFactory.getInstance("SunX509");
-
-            ks = KeyStore.getInstance("JKS");
-            tks = KeyStore.getInstance("JKS");
-
-            ks.load(new FileInputStream(SERVER_KEY_STORE_FILE), SERVER_KEY_STORE_PASSWORD.toCharArray());
-            tks.load(new FileInputStream(SERVER_TRUST_KEY_STORE_FILE), SERVER_TRUST_KEY_STORE_PASSWORD.toCharArray());
-
-            kmf.init(ks, SERVER_KEY_STORE_PASSWORD.toCharArray());
-            tmf.init(tks);
-
-            ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        try{
-            SSLServerSocket listener = (SSLServerSocket) ctx.getServerSocketFactory().createServerSocket(worldSocket.getInstance().config.port());
-            listener.setNeedClientAuth(worldSocket.getInstance().config.forceSSL());
-            worldSocket.getInstance().getLogger().info("starting socket server...");
-            worldSocket.getInstance().getLogger().info("using SSL");
-            if(worldSocket.getInstance().config.forceSSL())
-                worldSocket.getInstance().getLogger().info("force using SSL");
-            worldSocket.getInstance().getLogger().info("using port "+worldSocket.getInstance().config.port());
-            ExecutorService pool = Executors.newFixedThreadPool(worldSocket.getInstance().config.threads());
-            worldSocket.getInstance().getLogger().info("using "+worldSocket.getInstance().config.threads()+" threads");
+            SSLSocketKey socketKey = new SSLSocketKey();
+            socketKey.setKEY_STORE_FILE(worldSocketXConfig.getSERVER_KEY_STORE_FILE());
+            socketKey.setTRUST_KEY_STORE_FILE(worldSocketXConfig.getSERVER_TRUST_KEY_STORE_FILE());
+            socketKey.setKEY_STORE_PASSWORD(worldSocketXConfig.getSERVER_KEY_STORE_PASSWORD());
+            socketKey.setTRUST_KEY_STORE_PASSWORD(worldSocketXConfig.getSERVER_TRUST_KEY_STORE_PASSWORD());
+            System.out.println(Ansi.colorize("SocketKet set", Attribute.GREEN_TEXT()));
+            SSLServerSocket listener = (SSLServerSocket) socketKey.getCtx().getServerSocketFactory().createServerSocket(worldSocketXConfig.getPort());
+            System.out.println(Ansi.colorize("Listener set", Attribute.GREEN_TEXT()));
+            listener.setNeedClientAuth(true);
+            ExecutorService pool = Executors.newFixedThreadPool(worldSocketXConfig.getThreads());
+            System.out.println(Ansi.colorize("Pool set using " + worldSocketXConfig.getThreads() + " Threads", Attribute.GREEN_TEXT()));
             while (true) {
                 pool.execute(new Handler((SSLSocket) listener.accept()));
             }
