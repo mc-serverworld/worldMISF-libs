@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.UUID;
 
+//SSLServer socket will create new instance when new client connect;
+//each client will have unique id;
 public class ClientObject {
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private UUID UUID;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private UUID ProxyUUID;
