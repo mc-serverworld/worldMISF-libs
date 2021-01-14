@@ -5,5 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class ConnectInfo {
-   // @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private String
+   @Getter(AccessLevel.PUBLIC) private String UUID;
+
 }

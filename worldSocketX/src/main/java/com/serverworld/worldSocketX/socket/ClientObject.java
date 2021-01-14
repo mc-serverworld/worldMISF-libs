@@ -11,8 +11,20 @@ import java.util.UUID;
 //SSLServer socket will create new instance when new client connect;
 //each client will have unique id;
 public class ClientObject {
-    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private UUID UUID;
-    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private UUID ProxyUUID;
-    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private PrintWriter Printer;
-    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private ArrayList<String> Channels;
+    public ClientObject(UUID uuid,PrintWriter printWriter){
+
+    }
+    @Getter(AccessLevel.PUBLIC) private UUID UUID;
+    //@Getter(AccessLevel.PUBLIC) private UUID ProxyUUID;
+    @Getter(AccessLevel.PUBLIC) private PrintWriter Printer;
+    @Setter(AccessLevel.PUBLIC) @Getter(AccessLevel.PUBLIC) private ArrayList<String> Channels;
+    public void addChannel(String channel){//add listen channel
+        Channels.add(channel);
+    }
+    public void removeChannel(String channel){//add listen channel
+        Channels.remove(channel);
+    }
+    public void reSet(String channel){//add listen channel
+        Channels.clear();
+    }
 }
