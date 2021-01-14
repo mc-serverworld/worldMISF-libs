@@ -63,6 +63,9 @@ public class SSLSocketServer extends Thread {
                 synchronized (MessagesQueue) {
                     if (!MessagesQueue.isEmpty()) {
                         for (String stuff : MessagesQueue) {
+                            for(ClientObject clients :Clients){
+                                clients.getPrinter().println();
+                            }
                             for (PrintWriter writer : writers) {// foreach client object
                                 writer.println(stuff);
                             }
