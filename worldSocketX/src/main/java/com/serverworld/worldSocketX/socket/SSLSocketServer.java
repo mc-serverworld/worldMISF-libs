@@ -36,9 +36,11 @@ public class SSLSocketServer extends Thread {
             socketKey.setKEY_STORE_PASSWORD(worldSocketXConfig.getSERVER_KEY_STORE_PASSWORD());
             socketKey.setTRUST_KEY_STORE_PASSWORD(worldSocketXConfig.getSERVER_TRUST_KEY_STORE_PASSWORD());
             System.out.println(Ansi.colorize("SocketKet set", Attribute.GREEN_TEXT()));
+
             SSLServerSocket listener = (SSLServerSocket) socketKey.getCtx().getServerSocketFactory().createServerSocket(worldSocketXConfig.getPort());
             System.out.println(Ansi.colorize("Listener set", Attribute.GREEN_TEXT()));
-            listener.setNeedClientAuth(true);
+            listener.setNeedClientAuth(true);//Request client trusted
+            listener.setEnabledProtocols(new String[]{"TLSv1.2"});//Force TLS 1.2
             ExecutorService pool = Executors.newFixedThreadPool(worldSocketXConfig.getThreads());
             System.out.println(Ansi.colorize("Pool set using " + worldSocketXConfig.getThreads() + " Threads", Attribute.GREEN_TEXT()));
             while (true) {
@@ -50,7 +52,7 @@ public class SSLSocketServer extends Thread {
     }
 
     public void sendmessage(String message){
-        queue.add(message);
+        MessagesQueue.add(message);
         sender = new sender();
         sender.start();
     }
@@ -58,10 +60,10 @@ public class SSLSocketServer extends Thread {
     private class sender extends Thread {
         public void run() {
             try {
-                synchronized (queue) {
-                    if (!queue.isEmpty()) {
-                        for (String stuff : queue) {
-                            for (PrintWriter writer : writers) {
+                synchronized (MessagesQueue) {
+                    if (!MessagesQueue.isEmpty()) {
+                        for (String stuff : MessagesQueue) {
+                            for (PrintWriter writer : writers) {// foreach client object
                                 writer.println(stuff);
                             }
                         }
