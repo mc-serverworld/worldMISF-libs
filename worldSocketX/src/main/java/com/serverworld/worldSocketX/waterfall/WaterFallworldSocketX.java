@@ -65,7 +65,6 @@ public class WaterFallworldSocketX extends Plugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static WaterFallworldSocketX getInstance(){return waterFallworldSocketX;}

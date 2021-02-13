@@ -103,6 +103,7 @@ public class SSLSocketServer extends Thread {
 
                         JsonParser jsonParser = new JsonParser();
                         JsonObject jsonmsg = jsonParser.parse(LoginMessage).getAsJsonObject();
+
                         name = jsonmsg.get("name").getAsString();
                         if (!names.contains(name)) {
                             if (jsonmsg.get("password").getAsString().equals(worldSocket.getInstance().config.password())){
