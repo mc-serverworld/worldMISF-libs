@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.serverworld.worldSocketX.config.worldSocketXConfig;
+import com.serverworld.worldSocketX.waterfall.WaterFallworldSocketX;
+import com.serverworld.worldSocketX.waterfall.uitls.DebugMessage;
 import net.md_5.bungee.api.ChatColor;
 
 import javax.net.ssl.*;
@@ -185,7 +187,7 @@ public class SSLSocketServer extends Thread {
             } finally {
                 if (object != null) {
                     Clients.remove(object);
-                    worldSocket.getInstance().getLogger().info("Socket quit: " + name);
+                    DebugMessage.sendInfo("Socket quit: " + );
                 }
                 try {
                     socket.close();
