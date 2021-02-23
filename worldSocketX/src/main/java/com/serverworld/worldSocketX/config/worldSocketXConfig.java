@@ -8,7 +8,7 @@ public class worldSocketXConfig {
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static int ApiVersion;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static boolean Debug;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static int Port;
-    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String Password;
+    //@Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String Password;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static int Threads;
 
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String UUID;

@@ -2,6 +2,7 @@ package com.serverworld.worldSocketX.socket;
 
 import com.diogonunes.jcolor.Ansi;
 import com.diogonunes.jcolor.Attribute;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.serverworld.worldSocketX.config.worldSocketXConfig;
@@ -20,6 +21,7 @@ import java.util.concurrent.Executors;
 public class SSLSocketServer extends Thread {
     static ConcurrentLinkedQueue<String> MessagesQueue = new ConcurrentLinkedQueue<String>();
     private static Set<ClientObject> Clients = new HashSet<>();
+    private static Set<UUID> UUIDs = new HashSet<>();
     private sender sender;
     //private static Set<String> names = new HashSet<>();
     //private static Set<PrintWriter> writers = new HashSet<>();
@@ -81,10 +83,10 @@ public class SSLSocketServer extends Thread {
 
     private static class Handler implements Runnable {
         private String LoginMessage;
-        private String name;
         private SSLSocket socket;
         private Scanner in;
         private PrintWriter out;
+        private ClientObject object;
 
         public Handler(SSLSocket socket) {
             this.socket = socket;
@@ -95,11 +97,21 @@ public class SSLSocketServer extends Thread {
             try {
                 in = new Scanner(socket.getInputStream());
                 out = new PrintWriter(socket.getOutputStream(), true);
+
                 while (true) {
                     LoginMessage = in.nextLine();
                     if (LoginMessage == null)
                         return;
                     synchronized (Clients) {
+                        Gson gson = new Gson();
+                        LoginMessage loginMessage = gson.fromJson(LoginMessage, com.serverworld.worldSocketX.socket.LoginMessage.class);
+                        if(UUIDs.contains(loginMessage.UUID)){
+                            out.println("ERROR:UUID_USED");
+                            out.flush();
+                            return;
+                        }
+                        object = new ClientObject(loginMessage.UUID,out,loginMessage.ProtocolVersion);
+                        Clients.add(object);
 
                         JsonParser jsonParser = new JsonParser();
                         JsonObject jsonmsg = jsonParser.parse(LoginMessage).getAsJsonObject();
@@ -171,11 +183,8 @@ public class SSLSocketServer extends Thread {
             } catch (Exception e) {
                 System.out.println(e);
             } finally {
-                if (out != null) {
-                    writers.remove(out);
-                }
-                if (name != null) {
-                    names.remove(name);
+                if (object != null) {
+                    Clients.remove(object);
                     worldSocket.getInstance().getLogger().info("Socket quit: " + name);
                 }
                 try {

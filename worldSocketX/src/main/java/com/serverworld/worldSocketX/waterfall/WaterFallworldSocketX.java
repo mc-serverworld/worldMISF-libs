@@ -45,7 +45,7 @@ public class WaterFallworldSocketX extends Plugin {
             worldSocketXConfig.setApiVersion(configuration.getInt("configinfo.api-version"));
             worldSocketXConfig.setDebug(configuration.getBoolean("configinfo.debug"));
             worldSocketXConfig.setPort(configuration.getInt("general.port"));
-            worldSocketXConfig.setPassword(configuration.getString("general.password"));
+            //worldSocketXConfig.setPassword(configuration.getString("general.password"));
 
             worldSocketXConfig.setThreads(configuration.getInt("socketserver.threads"));
 
