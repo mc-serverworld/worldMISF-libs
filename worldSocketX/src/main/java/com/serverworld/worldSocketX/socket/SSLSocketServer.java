@@ -93,7 +93,6 @@ public class SSLSocketServer extends Thread {
                     }
                 }
                 out.println("ACCEPTED");
-                out.flush();
                 DebugMessage.sendInfo("Socket join: " + object.getUUID());
                 //-------END LOGIN PROCESS---------
                 while (true) {
@@ -103,24 +102,24 @@ public class SSLSocketServer extends Thread {
 
                     //Disconnect
                     if (input.equalsIgnoreCase("DISCONNECT"))
-                        return;
+                        break;
 
                     //Connect check
-                    if (input.equalsIgnoreCase("CONNECTCHECK")){
+                   else if(input.equalsIgnoreCase("CONNECTCHECK")){
                         out.println("CHECK:ONLINE");
                         DebugMessage.sendInfoIfDebug(object.getUUID() + " checking connection");
-                    }
+                   }
 
                     //Join channel
-                    if(input.startsWith("JOIN_CHANNEL:"))
+                    else if(input.startsWith("JOIN_CHANNEL:"))
                         object.addChannel(input.split(":")[1]);
 
                     //Leave channel
-                    if(input.startsWith("LEAVE_CHANNEL:"))
+                    else if(input.startsWith("LEAVE_CHANNEL:"))
                         object.removeChannel(input.split(":")[1]);
 
                     //Get channel list
-                    if(input.equalsIgnoreCase("GET_CHANNELS_LIST"))
+                    else if(input.equalsIgnoreCase("GET_CHANNELS_LIST"))
                         out.println(object.getChannels());//TODO NEED TEST
 
                     //TODO get client list
@@ -132,7 +131,11 @@ public class SSLSocketServer extends Thread {
                     //TODO send message via channel
                     //TODO send message to all client
 
-                    if{
+                    //-------START MESSAGE SEND PROCESS---------
+
+                    //-------END MESSAGE SEND PROCESS---------
+
+                    /*if{
                         JsonParser jsonParser = new JsonParser();
                         JsonObject jsonmsg = jsonParser.parse(input).getAsJsonObject();
                         try {
@@ -161,10 +164,9 @@ public class SSLSocketServer extends Thread {
                                 writer.flush();
                             }
                         }
-                    }
-                    //-------START MESSAGE SEND PROCESS---------
+                    }*/
 
-                    //-------END MESSAGE SEND PROCESS---------
+
                 }
             } catch (Exception e) {
                 System.out.println(e);
