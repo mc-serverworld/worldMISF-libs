@@ -55,34 +55,6 @@ public class SSLSocketServer extends Thread {
         }
     }
 
-    public void sendmessage(String message){
-        MessagesQueue.add(message);
-        sender = new sender();
-        sender.start();
-    }
-
-    private class sender extends Thread {
-        public void run() {
-            try {
-                synchronized (MessagesQueue) {
-                    if (!MessagesQueue.isEmpty()) {
-                        for (String stuff : MessagesQueue) {
-                            for(ClientObject clients :Clients){
-                                clients.getPrinter().println();
-                            }
-                            for (PrintWriter writer : writers) {// foreach client object
-                                writer.println(stuff);
-                            }
-                        }
-                        queue.clear();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private static class Handler implements Runnable {
         private String LoginMessage;
         private SSLSocket socket;
@@ -104,54 +76,63 @@ public class SSLSocketServer extends Thread {
                     LoginMessage = in.nextLine();
                     if (LoginMessage == null)
                         return;
+
                     synchronized (Clients) {
                         Gson gson = new Gson();
                         LoginMessage loginMessage = gson.fromJson(LoginMessage, com.serverworld.worldSocketX.socket.LoginMessage.class);
                         if(UUIDs.contains(loginMessage.UUID)){
                             out.println("ERROR:UUID_USED");
                             out.flush();
+                            DebugMessage.sendWarring(ChatColor.YELLOW + "Opps! seem some one use the same UUID: " + loginMessage.UUID);
                             return;
                         }
+
                         object = new ClientObject(loginMessage.UUID,out,loginMessage.ProtocolVersion);
                         Clients.add(object);
-
-                        JsonParser jsonParser = new JsonParser();
-                        JsonObject jsonmsg = jsonParser.parse(LoginMessage).getAsJsonObject();
-
-                        name = jsonmsg.get("name").getAsString();
-                        if (!names.contains(name)) {
-                            if (jsonmsg.get("password").getAsString().equals(worldSocket.getInstance().config.password())){
-                                names.add(name);
-                                break;
-                            }else {
-                                out.println("ERROR:WRONG_PASSWORD");
-                                out.flush();
-                                worldSocket.getInstance().getLogger().warning(ChatColor.RED + "Warring: Some one try to login with wrong password!" + " IP: " + socket.getRemoteSocketAddress());
-                            }
-                        }else {
-                            out.println("ERROR:NAME_USED");
-                            out.flush();
-                            worldSocket.getInstance().getLogger().warning(ChatColor.YELLOW + "Opps! seem some one use the same name: " + name);
-                        }
+                        break;
                     }
                 }
                 out.println("ACCEPTED");
                 out.flush();
-                worldSocket.getInstance().getLogger().info("Socket join: " + name);
-                //for (PrintWriter writer : writers) { }
-                writers.add(out);
-                //-------END---------
+                DebugMessage.sendInfo("Socket join: " + object.getUUID());
+                //-------END LOGIN PROCESS---------
                 while (true) {
                     String input = in.nextLine();
-                    if (input.toLowerCase().startsWith("leave")) {
-                        return;
-                    }
-                    if (input.toUpperCase().equals("CONNECTCHECK")){
-                        out.println("CHECK:ONLINE");
-                        if(worldSocketXConfig.isDebug())
-                            worldSocket.getInstance().getLogger().info(name + " checking connection");
 
-                    }else {
+                    //-------START SOCKET FUNCTION---------
+
+                    //Disconnect
+                    if (input.equalsIgnoreCase("DISCONNECT"))
+                        return;
+
+                    //Connect check
+                    if (input.equalsIgnoreCase("CONNECTCHECK")){
+                        out.println("CHECK:ONLINE");
+                        DebugMessage.sendInfoIfDebug(object.getUUID() + " checking connection");
+                    }
+
+                    //Join channel
+                    if(input.startsWith("JOIN_CHANNEL:"))
+                        object.addChannel(input.split(":")[1]);
+
+                    //Leave channel
+                    if(input.startsWith("LEAVE_CHANNEL:"))
+                        object.removeChannel(input.split(":")[1]);
+
+                    //Get channel list
+                    if(input.equalsIgnoreCase("GET_CHANNELS_LIST"))
+                        out.println(object.getChannels());//TODO NEED TEST
+
+                    //TODO get client list
+                    //TODO get channel client list
+
+                    //-------END SOCKET FUNCTION---------
+
+                    //TODO send message via UUID
+                    //TODO send message via channel
+                    //TODO send message to all client
+
+                    if{
                         JsonParser jsonParser = new JsonParser();
                         JsonObject jsonmsg = jsonParser.parse(input).getAsJsonObject();
                         try {
@@ -181,18 +162,50 @@ public class SSLSocketServer extends Thread {
                             }
                         }
                     }
+                    //-------START MESSAGE SEND PROCESS---------
+
+                    //-------END MESSAGE SEND PROCESS---------
                 }
             } catch (Exception e) {
                 System.out.println(e);
             } finally {
                 if (object != null) {
                     Clients.remove(object);
-                    DebugMessage.sendInfo("Socket quit: " + );
+                    DebugMessage.sendInfo("Socket quit: " + object.getUUID());
                 }
                 try {
                     socket.close();
                 } catch (IOException e) {
                 }
+            }
+        }
+        //End run
+    }
+
+    public void sendmessage(String message){
+        MessagesQueue.add(message);
+        sender = new sender();
+        sender.start();
+    }
+
+    private class sender extends Thread {
+        public void run() {
+            try {
+                synchronized (MessagesQueue) {
+                    if (!MessagesQueue.isEmpty()) {
+                        for (String stuff : MessagesQueue) {
+                            for(ClientObject clients :Clients){
+                                clients.getPrinter().println();
+                            }
+                            for (PrintWriter writer : writers) {// foreach client object
+                                writer.println(stuff);
+                            }
+                        }
+                        queue.clear();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
