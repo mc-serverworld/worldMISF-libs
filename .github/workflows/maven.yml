@@ -18,7 +18,6 @@ jobs:
         run: |
           mkdir -Force -p ~/.m2 
           echo "<settings><servers><server><id>gh</id><username>$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $1}')</username><password>\${{ secrets.GITHUB_TOKEN }}</password></server></servers></settings>" > ~/.m2/settings.xml
-          mvn install:install-file -Dfile="phoenix-paper\src\main\resources\Residence4.9.2.0.zip" -DgroupId="com.bekvon" -DartifactId=Residence -Dversion="4.9.2.0" -Dpackaging=jar -T90000
           mvn versions:set -DnewVersion=build-${{ github.run_number }} -DprocessAllModules -DgenerateBackupPoms=false versions:commit -T90000
           mvn install -T90000 -DskipTests
       - name: Upload Release
