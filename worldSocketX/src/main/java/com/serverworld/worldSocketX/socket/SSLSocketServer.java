@@ -24,7 +24,7 @@ public class SSLSocketServer extends Thread {
     static ConcurrentLinkedQueue<String> MessagesQueue = new ConcurrentLinkedQueue<String>();
     private static Set<ClientObject> Clients = new HashSet<>();
     private static Set<UUID> UUIDs = new HashSet<>();
-    private sender sender;
+    //private sender sender;
     //private static Set<String> names = new HashSet<>();
     //private static Set<PrintWriter> writers = new HashSet<>();
 
@@ -186,7 +186,7 @@ public class SSLSocketServer extends Thread {
         //End run
     }
 
-    public void sendmessage(String message){
+    /*public void sendmessage(String message){
         MessagesQueue.add(message);
         sender = new sender();
         sender.start();
@@ -212,5 +212,5 @@ public class SSLSocketServer extends Thread {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 }
