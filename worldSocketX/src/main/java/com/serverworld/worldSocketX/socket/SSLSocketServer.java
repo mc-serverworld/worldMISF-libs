@@ -81,14 +81,14 @@ public class SSLSocketServer extends Thread {
                     synchronized (Clients) {
                         Gson gson = new Gson();
                         LoginMessage loginMessage = gson.fromJson(LoginMessage, com.serverworld.worldSocketX.socket.LoginMessage.class);
-                        if(UUIDs.contains(loginMessage.UUID)){
+                        if (UUIDs.contains(loginMessage.UUID)) {
                             out.println("ERROR:UUID_USED");
                             out.flush();
                             DebugMessage.sendWarring(ChatColor.YELLOW + "Opps! seem some one use the same UUID: " + loginMessage.UUID);
                             return;
                         }
 
-                        object = new ClientObject(loginMessage.UUID,out,loginMessage.ProtocolVersion);
+                        object = new ClientObject(loginMessage.UUID, out, loginMessage.ProtocolVersion);
                         Clients.add(object);
                         break;
                     }
@@ -105,22 +105,22 @@ public class SSLSocketServer extends Thread {
                     if (input.equalsIgnoreCase("DISCONNECT"))
                         break;
 
-                    //Connect check
-                   else if(input.equalsIgnoreCase("CONNECTCHECK")){
+                        //Connect check
+                    else if (input.equalsIgnoreCase("CONNECTCHECK")) {
                         out.println("CHECK:ONLINE");
                         DebugMessage.sendInfoIfDebug(object.getUUID() + " checking connection");
-                   }
+                    }
 
                     //Join channel
-                    else if(input.startsWith("JOIN_CHANNEL:"))
+                    else if (input.startsWith("JOIN_CHANNEL:"))
                         object.addChannel(input.split(":")[1]);
 
-                    //Leave channel
-                    else if(input.startsWith("LEAVE_CHANNEL:"))
+                        //Leave channel
+                    else if (input.startsWith("LEAVE_CHANNEL:"))
                         object.removeChannel(input.split(":")[1]);
 
-                    //Get channel list
-                    else if(input.equalsIgnoreCase("GET_CHANNELS_LIST"))
+                        //Get channel list
+                    else if (input.equalsIgnoreCase("GET_CHANNELS_LIST"))
                         out.println(object.getChannels());//TODO NEED TEST
 
                     //TODO Get client list
@@ -185,7 +185,6 @@ public class SSLSocketServer extends Thread {
         }
         //End run
     }
-
     /*public void sendmessage(String message){
         MessagesQueue.add(message);
         sender = new sender();
