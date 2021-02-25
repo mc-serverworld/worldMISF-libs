@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <option name="BUILD_PROCESS_HEAP_SIZE" value="2048" />
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
@@ -11,10 +12,10 @@
         <module name="worldDataBase" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="worldDataBase" target="1.8" />
-      <module name="worldMISF-libs" target="1.8" />
-      <module name="worldSocketX" target="1.8" />
+    <bytecodeTargetLevel target="15.2">
+      <module name="worldDataBase" target="15.2" />
+      <module name="worldMISF-libs" target="15.2" />
+      <module name="worldSocketX" target="15.2" />
     </bytecodeTargetLevel>
   </component>
 </project>
