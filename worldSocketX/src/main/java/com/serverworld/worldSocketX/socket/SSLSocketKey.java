@@ -13,8 +13,8 @@ public class SSLSocketKey {
     private SSLContext ctx;
     private KeyManagerFactory kmf;
     private TrustManagerFactory tmf;
-    private KeyStore ks;
-    private KeyStore tks;
+    private KeyStore keyStore;
+    private KeyStore trustStore;
 
     @Setter(AccessLevel.PUBLIC) private String KEY_STORE_FILE;
     @Setter(AccessLevel.PUBLIC) private String TRUST_KEY_STORE_FILE;
@@ -28,14 +28,14 @@ public class SSLSocketKey {
             kmf = KeyManagerFactory.getInstance("SunX509");
             tmf = TrustManagerFactory.getInstance("SunX509");
 
-            ks = KeyStore.getInstance("JKS");
-            tks = KeyStore.getInstance("JKS");
+            keyStore = KeyStore.getInstance("PKIX");
+            trustStore = KeyStore.getInstance("PKIX");
 
-            ks.load(new FileInputStream(KEY_STORE_FILE), KEY_STORE_PASSWORD.toCharArray());
-            tks.load(new FileInputStream(TRUST_KEY_STORE_FILE), TRUST_KEY_STORE_PASSWORD.toCharArray());
+            keyStore.load(new FileInputStream(KEY_STORE_FILE), KEY_STORE_PASSWORD.toCharArray());
+            trustStore.load(new FileInputStream(TRUST_KEY_STORE_FILE), TRUST_KEY_STORE_PASSWORD.toCharArray());
 
-            kmf.init(ks, KEY_STORE_PASSWORD.toCharArray());
-            tmf.init(tks);
+            kmf.init(keyStore, KEY_STORE_PASSWORD.toCharArray());
+            tmf.init(trustStore);
 
             ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
             return ctx;
