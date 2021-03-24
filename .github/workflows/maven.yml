@@ -9,11 +9,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           clean: false
-      - name: Set up openJDK 15.0.2 win64
+      - name: Set up openJDK 16 win64
         uses: actions/setup-java@v1
         with:
-          java-version: "15.0.2"
-          jdkFile: "G:/BuildUtils/Jdk/openJdk/openjdk-15.0.2_windows-x64_bin.zip"
+          java-version: "16"
+          jdkFile: "G:/BuildUtils/Jdk/openJdk/openjdk-16_windows-x64_bin.zip"
       - name: Maven Install
         run: |
           mkdir -Force -p ~/.m2 
