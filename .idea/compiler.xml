@@ -13,9 +13,9 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="15.2">
-      <module name="worldDataBase" target="15.2" />
-      <module name="worldMISF-libs" target="15.2" />
-      <module name="worldSocketX" target="15.2" />
+      <module name="worldDataBase" target="16" />
+      <module name="worldMISF-libs" target="16" />
+      <module name="worldSocketX" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>
