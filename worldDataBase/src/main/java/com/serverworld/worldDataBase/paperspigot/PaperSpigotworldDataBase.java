@@ -1,7 +1,7 @@
 /*
  *
- *  * WorldMISF - cms of mc-serverworld
- *  * Copyright (C) 2019-2020 mc-serverworld
+ *  * WorldMISF-lib: library and basic component of mc-serverworld
+ *  * Copyright (C) 2020-2021 mc-serverworld
  *  *
  *  * This program is free software: you can redistribute it and/or modify
  *  * it under the terms of the GNU General Public License as published by
