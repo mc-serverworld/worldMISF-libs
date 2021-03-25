@@ -36,6 +36,16 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>15.2</source>
+                    <target>15.2</target>
+                    <release>15.2</release> <!-- compiler with jdk 15.0.2-->
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>

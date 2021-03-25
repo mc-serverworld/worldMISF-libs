@@ -3,17 +3,17 @@ on:
   push:
     branches: [ main ]
 jobs:
-  serverworldRunner1_openJDK_16:
+  serverworldRunner1_openJDK_15_0_2:
     runs-on: [MISF-SERVER-1-GithubRunner-2]
     steps:
       - uses: actions/checkout@v2
         with:
           clean: false
-      - name: Set up openJDK 16 win64
+      - name: Set up openJDK 15.0.2 win64
         uses: actions/setup-java@v1
         with:
-          java-version: "16"
-          jdkFile: "G:/BuildUtils/Jdk/openJdk/openjdk-16_windows-x64_bin.zip"
+          java-version: "15.0.2"
+          jdkFile: "G:/BuildUtils/Jdk/openJdk/openjdk-15.0.2_windows-x64_bin.zip"
       - name: Maven Install
         run: |
           mkdir -Force -p ~/.m2 
