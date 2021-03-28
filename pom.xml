@@ -99,17 +99,6 @@
                 <version>3.1.0</version>
             </plugin>
 
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <release>16</release> <!-- compiler with jdk 16-->
-                    <encoding>UTF-8</encoding>
-                    <source>16</source>
-                    <target>16</target>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
 </project>
