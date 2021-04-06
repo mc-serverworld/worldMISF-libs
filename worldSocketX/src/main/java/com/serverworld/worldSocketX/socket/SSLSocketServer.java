@@ -23,18 +23,13 @@ package com.serverworld.worldSocketX.socket;
 import com.diogonunes.jcolor.Ansi;
 import com.diogonunes.jcolor.Attribute;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.serverworld.worldSocketX.config.worldSocketXConfig;
-import com.serverworld.worldSocketX.waterfall.WaterFallworldSocketX;
 import com.serverworld.worldSocketX.waterfall.uitls.DebugMessage;
 import net.md_5.bungee.api.ChatColor;
 
 import javax.net.ssl.*;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.KeyStore;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -55,10 +50,6 @@ public class SSLSocketServer extends Thread {
     public void run() {
         try{
             SSLSocketKey socketKey = new SSLSocketKey();
-            socketKey.setKEY_STORE_FILE(worldSocketXConfig.getSERVER_KEY_STORE_FILE());
-            socketKey.setTRUST_KEY_STORE_FILE(worldSocketXConfig.getSERVER_TRUST_KEY_STORE_FILE());
-            socketKey.setKEY_STORE_PASSWORD(worldSocketXConfig.getSERVER_KEY_STORE_PASSWORD());
-            socketKey.setTRUST_KEY_STORE_PASSWORD(worldSocketXConfig.getSERVER_TRUST_KEY_STORE_PASSWORD());
             System.out.println(Ansi.colorize("SocketKet set", Attribute.GREEN_TEXT()));
 
             SSLServerSocket listener = (SSLServerSocket) socketKey.getCtx().getServerSocketFactory().createServerSocket(worldSocketXConfig.getPort());
@@ -133,11 +124,11 @@ public class SSLSocketServer extends Thread {
 
                     //Join channel
                     else if (input.startsWith("JOIN_CHANNEL:"))
-                        object.addChannel(input.split(":")[1]);
+                        object.addChannel(input.split(":")[1]);//TODO client system v2
 
                         //Leave channel
                     else if (input.startsWith("LEAVE_CHANNEL:"))
-                        object.removeChannel(input.split(":")[1]);
+                        object.removeChannel(input.split(":")[1]);//TODO client system v2
 
                         //Get channel list
                     else if (input.equalsIgnoreCase("GET_CHANNELS_LIST"))

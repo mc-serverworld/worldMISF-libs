@@ -20,9 +20,11 @@
 
 package com.serverworld.worldSocketX.socket;
 
+import com.serverworld.worldSocketX.config.worldSocketXConfig;
 import lombok.AccessLevel;
 import lombok.Setter;
 
+import javax.annotation.Nullable;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
@@ -36,14 +38,14 @@ public class SSLSocketKey {
     private KeyStore keyStore;
     private KeyStore trustStore;
 
-    @Setter(AccessLevel.PUBLIC) private String KEY_STORE_FILE;
-    @Setter(AccessLevel.PUBLIC) private String TRUST_KEY_STORE_FILE;
-    @Setter(AccessLevel.PUBLIC) private String KEY_STORE_PASSWORD;
-    @Setter(AccessLevel.PUBLIC) private String TRUST_KEY_STORE_PASSWORD;
+    @Setter(AccessLevel.PUBLIC) private String KeyStoreFile;
+    @Setter(AccessLevel.PUBLIC) private String TrustStoreFile;
+    @Setter(AccessLevel.PUBLIC) private String KeyStorePassword;
+    @Setter(AccessLevel.PUBLIC) private String TrustStorePassword;
 
     public SSLContext getCtx(){
         try {
-            ctx = SSLContext.getInstance("TLSv1.2");
+            ctx = SSLContext.getInstance("TLSv1.3");
 
             kmf = KeyManagerFactory.getInstance("SunX509");
             tmf = TrustManagerFactory.getInstance("SunX509");
@@ -51,11 +53,12 @@ public class SSLSocketKey {
             keyStore = KeyStore.getInstance("PKIX");
             trustStore = KeyStore.getInstance("PKIX");
 
-            keyStore.load(new FileInputStream(KEY_STORE_FILE), KEY_STORE_PASSWORD.toCharArray());
-            trustStore.load(new FileInputStream(TRUST_KEY_STORE_FILE), TRUST_KEY_STORE_PASSWORD.toCharArray());
+            keyStore.load(new FileInputStream(KeyStoreFile), KeyStorePassword.toCharArray());
+            trustStore.load(new FileInputStream(TrustStoreFile), TrustStorePassword.toCharArray());
 
-            kmf.init(keyStore, KEY_STORE_PASSWORD.toCharArray());
+            kmf.init(keyStore, KeyStorePassword.toCharArray());
             tmf.init(trustStore);
+
 
             ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
             return ctx;
@@ -63,6 +66,12 @@ public class SSLSocketKey {
             e.printStackTrace();
         }
         return null;
+    }
+    public void initialization(@Nullable ){
+        socketKey.setKeyStoreFile(worldSocketXConfig.getKeyStoreFile());
+        socketKey.setTrustStoreFile(worldSocketXConfig.getTrustStoreFile());
+        socketKey.setKeyStorePassword(worldSocketXConfig.getKeyStorePassword());
+        socketKey.setTrustStorePassword(worldSocketXConfig.getTrustStorePassword());
     }
 
 }

@@ -38,7 +38,7 @@ public class WaterFallworldSocketX extends Plugin {
     @Override
     public void onEnable() {
         waterFallworldSocketX = this;
-
+        LoadConfig();
     }
 
     public void LoadConfig(){
@@ -73,6 +73,12 @@ public class WaterFallworldSocketX extends Plugin {
             worldSocketXConfig.setHost(configuration.getString("client.host"));
             worldSocketXConfig.setCheckRate(configuration.getInt("client.check-rate"));
 
+            worldSocketXConfig.setKeyStoreFile(configuration.getString("SSL.keyStore_file"));
+            worldSocketXConfig.setTrustStoreFile(configuration.getString("SSL.trustStore_file"));
+            worldSocketXConfig.setKeyStorePassword(configuration.getString("SSL.keyStorePassword"));
+            worldSocketXConfig.setTrustStorePassword(configuration.getString("SSL.trustStorePassword"));
+
+/*
             worldSocketXConfig.setSERVER_KEY_STORE_FILE(configuration.getString("SSL.server.keyStore_file"));
             worldSocketXConfig.setSERVER_TRUST_KEY_STORE_FILE(configuration.getString("SSL.server.trustStore_file"));
             worldSocketXConfig.setSERVER_KEY_STORE_PASSWORD(configuration.getString("SSL.server.keyStorePassword"));
@@ -82,6 +88,7 @@ public class WaterFallworldSocketX extends Plugin {
             worldSocketXConfig.setCLIENT_TRUST_KEY_STORE_FILE(configuration.getString("SSL.client.trustStore_file"));
             worldSocketXConfig.setCLIENT_KEY_STORE_PASSWORD(configuration.getString("SSL.client.keyStorePassword"));
             worldSocketXConfig.setCLIENT_TRUST_KEY_STORE_PASSWORD(configuration.getString("SSL.client.trustStorePassword"));
+ */
         } catch (IOException e) {
             e.printStackTrace();
         }

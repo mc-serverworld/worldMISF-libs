@@ -36,7 +36,12 @@ public class worldSocketXConfig {
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String Host;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static int CheckRate;
 
+    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String KeyStoreFile;
+    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String TrustStoreFile;
+    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String KeyStorePassword;
+    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String TrustStorePassword;
 
+/*
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String SERVER_KEY_STORE_FILE;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String SERVER_TRUST_KEY_STORE_FILE;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String SERVER_KEY_STORE_PASSWORD;
@@ -46,4 +51,6 @@ public class worldSocketXConfig {
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String CLIENT_TRUST_KEY_STORE_FILE;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String CLIENT_KEY_STORE_PASSWORD;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String CLIENT_TRUST_KEY_STORE_PASSWORD;
+ */
+
 }

@@ -8,7 +8,6 @@ configinfo:
 
 general:
   port: 18964
-  password: "aba9cfde1fd706a0c83f373cd1c10e5f11faaa765e2229f9723f6f9b33e3506037820a9a0f1ed111d220e022b7a70c8ff88cb15e9db4905a0fbc5128335302fa"
 
 socketserver:
   threads: 100
@@ -21,13 +20,7 @@ client:
   #rate to check connection, use tick (20tick = 1sec)
 
 SSL:
-  server:
-    keyStore_file: "D:\\certificates\\minecraft\\kserver.keystore"
-    trustStore_file: "D:\\certificates\\minecraft\\tserver.keystore"
-    keyStorePassword: "password"
-    trustStorePassword: "password"
-  client:
-    keyStore_file: "D:\\certificates\\minecraft\\kclient.keystore"
-    trustStore_file: "D:\\certificates\\minecraft\\tclient.keystore"
-    keyStorePassword: "password"
-    trustStorePassword: "password"
+  keyStore_file: "D:\\certificates\\minecraft\\KeyStore.keystore"
+  trustStore_file: "D:\\certificates\\minecraft\\TrustStore.keystore"
+  keyStorePassword: "changeit"
+  trustStorePassword: "changeit"

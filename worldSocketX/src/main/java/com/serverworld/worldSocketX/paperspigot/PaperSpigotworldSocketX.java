@@ -26,11 +26,12 @@ import com.serverworld.worldSocket.paperspigot.socket.eventsender;
 import com.serverworld.worldSocket.paperspigot.socket.socketclient;
 import com.serverworld.worldSocket.paperspigot.util.checker;
 import com.serverworld.worldSocket.paperspigot.util.messager;
+import com.serverworld.worldSocketX.config.worldSocketXConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
-public class worldSocket extends JavaPlugin {
+public class PaperSpigotworldSocketX extends JavaPlugin {
 
     public worldSocketconfig config;
     public worldSocketCommands commands;
@@ -39,6 +40,7 @@ public class worldSocket extends JavaPlugin {
     public SSLsocketclient SSLsocketclient;
     public messager messager;
     public checker checker;
+    private static PaperSpigotworldSocketX paperSpigotworldSocketX;
 
 
     public void onLoad() {
@@ -47,7 +49,9 @@ public class worldSocket extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        config.loadDefConfig();
+        paperSpigotworldSocketX = this;
+        loadConfig();
+
         eventsender = new eventsender(this);
         if(config.useSSL()){
             SSLsocketclient = new SSLsocketclient(this);
@@ -79,5 +83,26 @@ public class worldSocket extends JavaPlugin {
             socketclient.startlogin();
         }
 
+    }
+
+    public void loadConfig(){
+        worldSocketXConfig.setApiVersion(getConfig().getInt("configinfo.api-version"));
+        worldSocketXConfig.setDebug(getConfig().getBoolean("configinfo.debug"));
+
+        worldSocketXConfig.setPort(getConfig().getInt("general.port"));
+        worldSocketXConfig.setThreads(getConfig().getInt("socketserver.threads"));
+
+        worldSocketXConfig.setUUID(getConfig().getString("client.uuid"));
+        worldSocketXConfig.setHost(getConfig().getString("client.host"));
+        worldSocketXConfig.setCheckRate(getConfig().getInt("client.check-rate"));
+
+        worldSocketXConfig.setKeyStoreFile(getConfig().getString("SSL.keyStore_file"));
+        worldSocketXConfig.setTrustStoreFile(getConfig().getString("SSL.trustStore_file"));
+        worldSocketXConfig.setKeyStorePassword(getConfig().getString("SSL.keyStorePassword"));
+        worldSocketXConfig.setTrustStorePassword(getConfig().getString("SSL.trustStorePassword"));
+    }
+
+    public static PaperSpigotworldSocketX getInstance(){
+        return paperSpigotworldSocketX;
     }
 }
