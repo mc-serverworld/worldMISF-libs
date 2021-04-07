@@ -67,11 +67,11 @@ public class SSLSocketKey {
         }
         return null;
     }
-    public void initialization(@Nullable ){
-        socketKey.setKeyStoreFile(worldSocketXConfig.getKeyStoreFile());
-        socketKey.setTrustStoreFile(worldSocketXConfig.getTrustStoreFile());
-        socketKey.setKeyStorePassword(worldSocketXConfig.getKeyStorePassword());
-        socketKey.setTrustStorePassword(worldSocketXConfig.getTrustStorePassword());
+    public void initialization(){
+        setKeyStoreFile(worldSocketXConfig.getKeyStoreFile());
+        setTrustStoreFile(worldSocketXConfig.getTrustStoreFile());
+        setKeyStorePassword(worldSocketXConfig.getKeyStorePassword());
+        setTrustStorePassword(worldSocketXConfig.getTrustStorePassword());
     }
 
 }
