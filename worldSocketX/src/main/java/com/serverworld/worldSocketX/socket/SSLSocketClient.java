@@ -22,8 +22,8 @@ package com.serverworld.worldSocketX.socket;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.serverworld.worldSocket.paperspigot.util.socketloginer;
-import com.serverworld.worldSocket.paperspigot.worldSocket;
+import com.serverworld.worldSocketX.config.worldSocketXConfig;
+import com.serverworld.worldSocketX.paperspigot.util.DebugMessage;
 import net.md_5.bungee.api.ChatColor;
 import org.json.JSONObject;
 
@@ -38,67 +38,34 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SSLSocketClient {
-    private worldSocket worldsocket;
-    private login loginer = new login();
+    private SSLSocketKey socketKey = new SSLSocketKey();
+
     private sender sender = new sender();
 
-
-
-    private String CLIENT_KEY_STORE_FILE;
-    private String CLIENT_TRUST_KEY_STORE_FILE;
-    private String CLIENT_KEY_STORE_PASSWORD;
-    private String CLIENT_TRUST_KEY_STORE_PASSWORD;
 
     static SSLSocket socket;
     //private static Scanner in;
     //private static PrintWriter out;
 
-    static ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
+    //static ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
     private boolean shouldStop=false;
 
-    public SSLSocketClient(worldSocket worldsocket){
-        this.worldsocket=worldsocket;
-    }
-    public void startlogin(){
-        loginer.start();
+    public SSLSocketClient(){ }
+    public void startConnect(){
+        Connecter connecter = new Connecter();
+        connecter.start();
     }
     public void closesocket(){
         shouldStop=true;
     }
 
-    class login extends Thread{
+    class Connecter extends Thread{
         @Override
         public void run() {
             try {
-                SSLContext ctx;
-                KeyManagerFactory kmf;
-                TrustManagerFactory tmf;
-                KeyStore ks;
-                KeyStore tks;
+                socketKey.initialization();
 
-                CLIENT_KEY_STORE_FILE = worldsocket.config.client_keyStore_file();
-                CLIENT_TRUST_KEY_STORE_FILE = worldsocket.config.client_trustStore_file();
-                CLIENT_KEY_STORE_PASSWORD = worldsocket.config.client_keyStore_password();
-                CLIENT_TRUST_KEY_STORE_PASSWORD = worldsocket.config.client_trustStore_password();
-
-                ctx = SSLContext.getInstance("SSL");
-
-                kmf = KeyManagerFactory.getInstance("SunX509");
-                tmf = TrustManagerFactory.getInstance("SunX509");
-
-                ks = KeyStore.getInstance("JKS");
-                tks = KeyStore.getInstance("JKS");
-
-                ks.load(new FileInputStream(CLIENT_KEY_STORE_FILE), CLIENT_KEY_STORE_PASSWORD.toCharArray());
-                tks.load(new FileInputStream(CLIENT_TRUST_KEY_STORE_FILE), CLIENT_TRUST_KEY_STORE_PASSWORD.toCharArray());
-
-                kmf.init(ks, CLIENT_KEY_STORE_PASSWORD.toCharArray());
-                tmf.init(tks);
-
-                ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
-                if(worldsocket.config.debug())
-                    worldsocket.getLogger().info("SSL okay");
-                socket = (SSLSocket) (ctx.getSocketFactory().createSocket(worldsocket.config.host(),worldsocket.config.port()));
+                socket = (SSLSocket) (socketKey.getCtx().getSocketFactory().createSocket(worldSocketXConfig.getHost(),worldSocketXConfig.getPort());
                 socket.setSoTimeout(300);
                 socket.setNeedClientAuth(worldsocket.config.forceSSL());
                 Scanner in = new Scanner(socket.getInputStream());
@@ -155,7 +122,7 @@ public class SSLSocketClient {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                worldsocket.getLogger().warning(ChatColor.RED + "Error while connect to socket server");
+                DebugMessage.sendWarring(ChatColor.RED + "Error while connect to socket server");
             }
         }
     }

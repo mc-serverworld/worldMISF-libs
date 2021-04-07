@@ -25,18 +25,24 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class LoginMessage {
-    public UUID UUID;
-    public int ProtocolVersion;
-    public LoginMessage(UUID UUID, int ProtocolVersion){
+    @Getter(AccessLevel.PUBLIC) UUID UUID;
+    @Getter(AccessLevel.PUBLIC) int ProtocolVersion;
+
+    public LoginMessage(@Nullable UUID UUID, @Nullable int ProtocolVersion){
         this.UUID = UUID;
         this.ProtocolVersion = ProtocolVersion;
     }
 
-    public String getJson(){
+    public LoginMessage(String msg){
+
+    }
+
+    public String getLoginJson(){
         Gson gson = new Gson();
         return gson.toJson(this,LoginMessage.class);
     }

@@ -50,6 +50,7 @@ public class SSLSocketServer extends Thread {
     public void run() {
         try{
             SSLSocketKey socketKey = new SSLSocketKey();
+            socketKey.initialization();
             System.out.println(Ansi.colorize("SocketKet set", Attribute.GREEN_TEXT()));
 
             SSLServerSocket listener = (SSLServerSocket) socketKey.getCtx().getServerSocketFactory().createServerSocket(worldSocketXConfig.getPort());
@@ -98,14 +99,14 @@ public class SSLSocketServer extends Thread {
                             DebugMessage.sendWarring(ChatColor.YELLOW + "Opps! seem some one use the same UUID: " + loginMessage.UUID);
                             return;
                         }
-
-                        object = new ClientObject(loginMessage.UUID, out, loginMessage.ProtocolVersion);
+                        object = new ClientObject(loginMessage.UUID, socket, out,loginMessage.ProtocolVersion);
                         Clients.add(object);
                         break;
                     }
                 }
                 out.println("ACCEPTED");
                 DebugMessage.sendInfo("Socket join: " + object.getUUID());
+                DebugMessage.sendInfo(object.getSocket().getInetAddress().toString());
                 //-------END LOGIN PROCESS---------
                 while (true) {
                     String input = in.nextLine();
