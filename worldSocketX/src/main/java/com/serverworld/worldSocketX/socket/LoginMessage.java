@@ -23,23 +23,18 @@ package com.serverworld.worldSocketX.socket;
 import com.google.gson.Gson;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Login information, contain UUID and Protocol version
+ */
 public class LoginMessage {
     @Getter(AccessLevel.PUBLIC) UUID UUID;
     @Getter(AccessLevel.PUBLIC) int ProtocolVersion;
 
-    public LoginMessage(@Nullable UUID UUID, @Nullable int ProtocolVersion){
+    public LoginMessage(UUID UUID, int ProtocolVersion){
         this.UUID = UUID;
         this.ProtocolVersion = ProtocolVersion;
-    }
-
-    public LoginMessage(String msg){
-
     }
 
     public String getLoginJson(){
