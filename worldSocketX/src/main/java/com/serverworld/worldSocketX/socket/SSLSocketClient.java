@@ -23,7 +23,9 @@ package com.serverworld.worldSocketX.socket;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.serverworld.worldSocketX.config.worldSocketXConfig;
+import com.serverworld.worldSocketX.paperspigot.PaperSpigotworldSocketX;
 import com.serverworld.worldSocketX.paperspigot.util.DebugMessage;
+import com.serverworld.worldSocketX.paperspigot.util.messager;
 import net.md_5.bungee.api.ChatColor;
 import org.json.JSONObject;
 
@@ -34,12 +36,12 @@ import javax.net.ssl.TrustManagerFactory;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.security.KeyStore;
+import java.util.Date;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SSLSocketClient {
-    private SSLSocketKey socketKey = new SSLSocketKey();
-
     private sender sender = new sender();
 
 
@@ -48,46 +50,37 @@ public class SSLSocketClient {
     //private static PrintWriter out;
 
     //static ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
-    private boolean shouldStop=false;
 
-    public SSLSocketClient(){ }
     public void startConnect(){
         Connecter connecter = new Connecter();
         connecter.start();
-    }
-    public void closesocket(){
-        shouldStop=true;
     }
 
     class Connecter extends Thread{
         @Override
         public void run() {
             try {
+                SSLSocketKey socketKey = new SSLSocketKey();
                 socketKey.initialization();
 
                 socket = (SSLSocket) (socketKey.getCtx().getSocketFactory().createSocket(worldSocketXConfig.getHost(),worldSocketXConfig.getPort());
                 socket.setSoTimeout(300);
-                socket.setNeedClientAuth(worldsocket.config.forceSSL());
                 Scanner in = new Scanner(socket.getInputStream());
-                PrintWriter out = new PrintWriter(socket.getOutputStream());
-                socketloginer socketloginer = new socketloginer();
-                socketloginer.setName(worldsocket.config.name().toString());
-                socketloginer.setPassword(worldsocket.config.password().toString());
-                out.println(socketloginer.createmessage().toString());
-                out.flush();
-                if(worldsocket.config.debug())
-                    worldsocket.getLogger().info("send login msg: " + socketloginer.createmessage());
+                PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
+                DebugMessage.sendInfo("Loading login message...");
+                LoginMessage loginMessage = new LoginMessage(worldSocketXConfig.getUUID(),0);
+                out.println(loginMessage.getLoginJson());
+                DebugMessage.sendInfo("Login with: " + loginMessage.UUID);
+                DebugMessage.sendInfo("ProtocolVersion: " + 0);
                 while (true){
-                    in = new Scanner(socket.getInputStream());
+                    //in = new Scanner(socket.getInputStream());
                     if (in.hasNextLine()) {
                         String message = in.nextLine();
-                        if (worldsocket.config.debug()) {worldsocket.getLogger().info("received: " + message);}
+                        DebugMessage.sendInfoIfDebug("----Message receive----\n" + message + "\n----------------------");
                         if(message.equals("ACCEPTED")){
-                            worldsocket.getLogger().info(ChatColor.GREEN + "Connect to socket server!");
-                        }else if(message.equals("ERROR:NAME_USED")) {
-                            worldsocket.getLogger().warning(ChatColor.RED + "The name has been used!");
-                        }else if(message.equals("ERROR:WRONG_PASSWORD")){
-                            worldsocket.getLogger().warning(ChatColor.RED + "Wrong password!");
+                            DebugMessage.sendInfo(ChatColor.GREEN + "Connected to server!");
+                        }else if(message.equals("ERROR:UUID_USED")) {
+                            DebugMessage.sendWarring(ChatColor.RED + "The UUID has been used!");
                         }else if(message.equals("CHECK:ONLINE")){
                             worldsocket.checker.clearlist();
                         } else {
@@ -155,4 +148,27 @@ public class SSLSocketClient {
             }
         }
     }
+
+    private void checker(){
+        PaperSpigotworldSocketX.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(PaperSpigotworldSocketX.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                synchronized (list) {
+                    list.add("CHECKING:" + new Date().getTime());
+                    messager.sendmessage("CONNECTCHECK");
+                    if (worldsocket.config.debug())
+                        worldsocket.getLogger().info("checking connection");
+
+                    if (!list.isEmpty()) {
+                        if(list.size()>3){
+                            worldsocket.reconnect();
+                            list.clear();
+                        }
+                    }
+                }
+            }
+        }, 0L, worldsocket.config.checkrate());
+    }
+
+
 }

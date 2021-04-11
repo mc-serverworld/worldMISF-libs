@@ -69,7 +69,7 @@ public class WaterFallworldSocketX extends Plugin {
 
             worldSocketXConfig.setThreads(configuration.getInt("socketserver.threads"));
 
-            worldSocketXConfig.setUUID(configuration.getString("client.uuid"));
+            worldSocketXConfig.setUUID(UUID.fromString(configuration.getString("client.uuid")));
             worldSocketXConfig.setHost(configuration.getString("client.host"));
             worldSocketXConfig.setCheckRate(configuration.getInt("client.check-rate"));
 
@@ -94,5 +94,8 @@ public class WaterFallworldSocketX extends Plugin {
         }
     }
 
+    /**
+     * Return WaterFallSocketX Plugin Instance.
+     */
     public static WaterFallworldSocketX getInstance(){return waterFallworldSocketX;}
 }

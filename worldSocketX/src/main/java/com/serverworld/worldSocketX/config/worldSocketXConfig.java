@@ -24,6 +24,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 public class worldSocketXConfig {
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static int ApiVersion;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static boolean Debug;
@@ -31,7 +33,7 @@ public class worldSocketXConfig {
     //@Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String Password;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static int Threads;
 
-    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String UUID;
+    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static java.util.UUID UUID;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String Name;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static String Host;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC) private static int CheckRate;

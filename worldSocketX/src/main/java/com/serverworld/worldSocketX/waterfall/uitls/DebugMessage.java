@@ -24,19 +24,33 @@ package com.serverworld.worldSocketX.waterfall.uitls;
 import com.serverworld.worldSocketX.config.worldSocketXConfig;
 import com.serverworld.worldSocketX.waterfall.WaterFallworldSocketX;
 
+/**
+ * Console message sender.
+ * ChatColor is supported.
+ */
 public class DebugMessage {
-
+    /**
+     * Send info level message to console.
+     */
     public static void sendInfo(String msg){
         WaterFallworldSocketX.getInstance().getLogger().info(msg);
     }
+    /**
+     * Send warring level message to console.
+     */
     public static void sendWarring(String msg){
         WaterFallworldSocketX.getInstance().getLogger().warning(msg);
     }
+    /**
+     * Send info level message to console if debug mode is true.
+     */
     public static void sendInfoIfDebug(String msg){
         if(worldSocketXConfig.isDebug())
             WaterFallworldSocketX.getInstance().getLogger().info(msg);
-
     }
+    /**
+     * Send warring level message to console if debug mode is true.
+     */
     public static void sendWarringIfDebug(String msg){
         if(worldSocketXConfig.isDebug())
             WaterFallworldSocketX.getInstance().getLogger().warning(msg);

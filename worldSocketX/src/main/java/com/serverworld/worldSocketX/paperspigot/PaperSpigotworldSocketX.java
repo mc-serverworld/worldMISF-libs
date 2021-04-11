@@ -30,6 +30,8 @@ import com.serverworld.worldSocketX.config.worldSocketXConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.UUID;
+
 
 public class PaperSpigotworldSocketX extends JavaPlugin {
 
@@ -86,13 +88,19 @@ public class PaperSpigotworldSocketX extends JavaPlugin {
     }
 
     public void loadConfig(){
+        saveDefaultConfig();
+        reloadConfig();
+        if(UUID.fromString(getConfig().getString("client.uuid"))instanceof UUID)
+            getConfig().set("client.uuid",UUID.randomUUID());
+        saveConfig();
+        reloadConfig();
         worldSocketXConfig.setApiVersion(getConfig().getInt("configinfo.api-version"));
         worldSocketXConfig.setDebug(getConfig().getBoolean("configinfo.debug"));
 
         worldSocketXConfig.setPort(getConfig().getInt("general.port"));
         worldSocketXConfig.setThreads(getConfig().getInt("socketserver.threads"));
 
-        worldSocketXConfig.setUUID(getConfig().getString("client.uuid"));
+        worldSocketXConfig.setUUID(UUID.fromString(getConfig().getString("client.uuid")));
         worldSocketXConfig.setHost(getConfig().getString("client.host"));
         worldSocketXConfig.setCheckRate(getConfig().getInt("client.check-rate"));
 

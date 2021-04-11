@@ -31,6 +31,9 @@ import javax.net.ssl.TrustManagerFactory;
 import java.io.FileInputStream;
 import java.security.KeyStore;
 
+/**
+ * SSLSocketKey provide SSLContext(Aka Ctx), this component can load and verify X509 auth needed files.
+ */
 public class SSLSocketKey {
     private SSLContext ctx;
     private KeyManagerFactory kmf;
@@ -43,6 +46,9 @@ public class SSLSocketKey {
     @Setter(AccessLevel.PUBLIC) private String KeyStorePassword;
     @Setter(AccessLevel.PUBLIC) private String TrustStorePassword;
 
+    /**
+     * Return SSLContext, need initialization before use this method.
+     */
     public SSLContext getCtx(){
         try {
             ctx = SSLContext.getInstance("TLSv1.3");
@@ -67,6 +73,10 @@ public class SSLSocketKey {
         }
         return null;
     }
+
+    /**
+     * Load KeyStore,TrustStore form path provide by config.
+     */
     public void initialization(){
         setKeyStoreFile(worldSocketXConfig.getKeyStoreFile());
         setTrustStoreFile(worldSocketXConfig.getTrustStoreFile());

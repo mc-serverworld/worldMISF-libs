@@ -21,12 +21,13 @@
 package com.serverworld.worldSocketX.socket;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
 import java.util.UUID;
 
 /**
- * Login information, contain UUID and Protocol version
+ * Login information, contain UUID and Protocol version.
  */
 public class LoginMessage {
     @Getter(AccessLevel.PUBLIC) UUID UUID;
@@ -37,9 +38,21 @@ public class LoginMessage {
         this.ProtocolVersion = ProtocolVersion;
     }
 
+    /**
+     * Return class in json type.
+     */
     public String getLoginJson(){
         Gson gson = new Gson();
         return gson.toJson(this,LoginMessage.class);
+    }
+
+    /**
+     * Return class convert form string.
+     * @param stg gson type string
+     */
+    public LoginMessage convertToClass(String stg){
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        return gson.fromJson(stg, LoginMessage.class);
     }
 
 }
