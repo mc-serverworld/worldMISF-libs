@@ -20,6 +20,7 @@
 
 package com.serverworld.worldSocketX.socket;
 
+import com.google.common.hash.Hashing;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.serverworld.worldSocketX.config.worldSocketXConfig;
@@ -34,7 +35,9 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManagerFactory;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.util.Date;
 import java.util.Scanner;
@@ -42,14 +45,15 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SSLSocketClient {
-    private sender sender = new sender();
+    //private sender sender = new sender();
 
 
     static SSLSocket socket;
     //private static Scanner in;
     //private static PrintWriter out;
 
-    //static ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
+    static ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
+    private static ConcurrentLinkedQueue<String> ConnectCheckList = new ConcurrentLinkedQueue<>();
 
     public void startConnect(){
         Connecter connecter = new Connecter();
@@ -63,7 +67,7 @@ public class SSLSocketClient {
                 SSLSocketKey socketKey = new SSLSocketKey();
                 socketKey.initialization();
 
-                socket = (SSLSocket) (socketKey.getCtx().getSocketFactory().createSocket(worldSocketXConfig.getHost(),worldSocketXConfig.getPort());
+                socket = (SSLSocket) (socketKey.getCtx().getSocketFactory().createSocket(worldSocketXConfig.getHost(),worldSocketXConfig.getPort()));
                 socket.setSoTimeout(300);
                 Scanner in = new Scanner(socket.getInputStream());
                 PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
@@ -81,9 +85,11 @@ public class SSLSocketClient {
                             DebugMessage.sendInfo(ChatColor.GREEN + "Connected to server!");
                         }else if(message.equals("ERROR:UUID_USED")) {
                             DebugMessage.sendWarring(ChatColor.RED + "The UUID has been used!");
-                        }else if(message.equals("CHECK:ONLINE")){
-                            worldsocket.checker.clearlist();
-                        } else {
+                        }else if(message.startsWith("CHECK:")){
+                            String[] stgs = message.split(":");
+                            ConnectCheckList.remove(stgs[1]);
+                        }else {
+                            /*
                             JsonParser jsonParser = new JsonParser();
                             JsonObject jsonmsg = jsonParser.parse(message).getAsJsonObject();
                             JSONObject json = new JSONObject(message);
@@ -107,7 +113,7 @@ public class SSLSocketClient {
 
                             }else
                                 if (worldsocket.config.debug())
-                                worldsocket.getLogger().info(ChatColor.YELLOW + "Unknow message");
+                                worldsocket.getLogger().info(ChatColor.YELLOW + "Unknow message");*/
                         }
 
                     }
@@ -120,25 +126,36 @@ public class SSLSocketClient {
         }
     }
 
-    public void sendmessage(String message){
-        queue.add(message);
-        sender = new sender();
-        sender.start();
+    public static void sendMessage(String message) {
+        //queue.add(message);
+        ConnectCheckList.add(Hashing.crc32c().hashString(message, StandardCharsets.UTF_8).toString());
+        try {
+            PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
+            out.println("");//TODO Send Message
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private class sender extends Thread {
+    public static void sendRawMessage(String message){
+        try {
+            PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
+            out.println(message);//TODO Send Message
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*private class Sender extends Thread {
         public void run() {
             try {
-                PrintWriter out = new PrintWriter(socket.getOutputStream());
+                PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
                     synchronized (queue) {
                         if (!queue.isEmpty()) {
                             for (String stuff : queue) {
                                 //TODO create event
                                 out.println(stuff);
-                                out.flush();
-                                if (worldsocket.config.debug()) {
-                                    worldsocket.getLogger().info("send: " + stuff);
-                                }
+                                DebugMessage.sendInfoIfDebug("----Message receive----\n" + stuff + "\n----------------------");
                             }
                             queue.clear();
                         }
@@ -147,28 +164,23 @@ public class SSLSocketClient {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     private void checker(){
+        ConnectCheckList.clear();
         PaperSpigotworldSocketX.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(PaperSpigotworldSocketX.getInstance(), new Runnable() {
             @Override
             public void run() {
-                synchronized (list) {
-                    list.add("CHECKING:" + new Date().getTime());
-                    messager.sendmessage("CONNECTCHECK");
-                    if (worldsocket.config.debug())
-                        worldsocket.getLogger().info("checking connection");
-
-                    if (!list.isEmpty()) {
-                        if(list.size()>3){
-                            worldsocket.reconnect();
-                            list.clear();
+                synchronized (ConnectCheckList) {
+                        //ConnectCheckList.add(String.valueOf(new Date().getTime());
+                        //PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
+                        //DebugMessage.sendInfoIfDebug("checking connection");
+                        if(ConnectCheckList.size()>3) {
+                            ConnectCheckList.clear();
+                            //TODO Call reconnect
                         }
-                    }
                 }
             }
-        }, 0L, worldsocket.config.checkrate());
+        }, 0L, worldSocketXConfig.getCheckRate()*20);
     }
-
-
 }

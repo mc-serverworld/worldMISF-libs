@@ -20,11 +20,18 @@
 
 package com.serverworld.worldSocketX.socket;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+
 import java.util.UUID;
 
 public class MessageObject {
 
-    public MessageObject(String message, String protocol) {
+    @Getter(AccessLevel.PUBLIC) private UUID Sender;
+    @Getter(AccessLevel.PUBLIC) private UUID Receiver;
+
+
+    public MessageObject(String Message, String Crc32c) {
 
     }
 }

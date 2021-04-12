@@ -8,15 +8,17 @@ configinfo:
 
 general:
   port: 18964
+  #port of socket
 
 socketserver:
   threads: 100
+  #Number of client
 
 client:
   uuid: ""
   #dont touch UUID
   host: "127.0.0.1"
-  check-rate: 60
+  check-rate: 30
   #rate to check connection, use tick (20tick = 1sec)
 
 SSL:
