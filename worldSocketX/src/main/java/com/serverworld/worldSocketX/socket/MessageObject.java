@@ -20,18 +20,38 @@
 
 package com.serverworld.worldSocketX.socket;
 
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.var;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.zip.CRC32C;
+
 
 public class MessageObject {
 
-    @Getter(AccessLevel.PUBLIC) private UUID Sender;
-    @Getter(AccessLevel.PUBLIC) private UUID Receiver;
+    @Getter(AccessLevel.PUBLIC) private String Message;
+    @Getter(AccessLevel.PUBLIC) private String Sender;
+    @Getter(AccessLevel.PUBLIC) private String Receiver;
 
+    public UUID getSenderUUID(){ return UUID.fromString(Sender);}
+    public UUID getReceiverUUID(){ return UUID.fromString(Receiver);}
 
-    public MessageObject(String Message, String Crc32c) {
-
+    public MessageObject(String Message, UUID sender, UUID receiver) {
+        this.Sender = sender.toString();
+        this.Receiver = receiver.toString();
     }
+
+    public MessageObject(String Message, String sender, String receiver) {
+        this.Sender = sender;
+        this.Receiver = receiver;
+    }
+
+    public HashCode getCRC32C(){
+        return Hashing.crc32c().hashString(Message, StandardCharsets.UTF_8);
+    }
+
 }

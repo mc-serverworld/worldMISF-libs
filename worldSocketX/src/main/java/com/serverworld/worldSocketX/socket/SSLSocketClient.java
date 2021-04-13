@@ -87,7 +87,7 @@ public class SSLSocketClient {
                             DebugMessage.sendWarring(ChatColor.RED + "The UUID has been used!");
                         }else if(message.startsWith("CHECK:")){
                             String[] stgs = message.split(":");
-                            ConnectCheckList.remove(stgs[1]);
+                            ConnectCheckList.
                         }else {
                             /*
                             JsonParser jsonParser = new JsonParser();
