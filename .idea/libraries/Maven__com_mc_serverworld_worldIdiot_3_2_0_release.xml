@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Maven: com.mc-serverworld:worldIdiot:3.2.0-release">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldidiot/3.2.0-release/worldIdiot-3.2.0-release.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldIdiot/3.2.0-release/worldIdiot-3.2.0-release.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldidiot/3.2.0-release/worldIdiot-3.2.0-release-javadoc.jar!/" />
@@ -25,6 +25,7 @@
       <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldidiot/3.2.0-release/worldIdiot-3.2.0-release-javadoc.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldidiot/3.2.0-release/worldIdiot-3.2.0-release-javadoc.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldidiot/3.2.0-release/worldIdiot-3.2.0-release-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldIdiot/3.2.0-release/worldIdiot-3.2.0-release-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldidiot/3.2.0-release/worldIdiot-3.2.0-release-sources.jar!/" />
@@ -48,6 +49,7 @@
       <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldidiot/3.2.0-release/worldIdiot-3.2.0-release-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldidiot/3.2.0-release/worldIdiot-3.2.0-release-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldidiot/3.2.0-release/worldIdiot-3.2.0-release-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/mc-serverworld/worldIdiot/3.2.0-release/worldIdiot-3.2.0-release-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

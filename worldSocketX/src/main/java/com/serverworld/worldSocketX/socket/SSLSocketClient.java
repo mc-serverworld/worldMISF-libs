@@ -53,7 +53,7 @@ public class SSLSocketClient {
     //private static PrintWriter out;
 
     static ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
-    private static ConcurrentLinkedQueue<String> ConnectCheckList = new ConcurrentLinkedQueue<>();
+    private static ConcurrentLinkedQueue<MessageObject> SendMessageList = new ConcurrentLinkedQueue<>();
 
     public void startConnect(){
         Connecter connecter = new Connecter();
@@ -83,11 +83,11 @@ public class SSLSocketClient {
                         DebugMessage.sendInfoIfDebug("----Message receive----\n" + message + "\n----------------------");
                         if(message.equals("ACCEPTED")){
                             DebugMessage.sendInfo(ChatColor.GREEN + "Connected to server!");
-                        }else if(message.equals("ERROR:UUID_USED")) {
+                        }else if(message.equals("ERROR::UUID_USED")) {
                             DebugMessage.sendWarring(ChatColor.RED + "The UUID has been used!");
-                        }else if(message.startsWith("CHECK:")){
-                            String[] stgs = message.split(":");
-                            ConnectCheckList.
+                        }else if(message.startsWith("CHECK::")){
+                            String[] stgs = message.split("::");
+                            SendMessageList.removeIf(stuff -> stuff.getCRC32C().equals(stgs[1]));
                         }else {
                             /*
                             JsonParser jsonParser = new JsonParser();
@@ -126,9 +126,9 @@ public class SSLSocketClient {
         }
     }
 
-    public static void sendMessage(String message) {
+    public static void sendMessage(MessageObject messageObject) {
         //queue.add(message);
-        ConnectCheckList.add(Hashing.crc32c().hashString(message, StandardCharsets.UTF_8).toString());
+        SendMessageList.add(messageObject);
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
             out.println("");//TODO Send Message
@@ -167,16 +167,16 @@ public class SSLSocketClient {
     }*/
 
     private void checker(){
-        ConnectCheckList.clear();
+        SendMessageList.clear();
         PaperSpigotworldSocketX.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(PaperSpigotworldSocketX.getInstance(), new Runnable() {
             @Override
             public void run() {
-                synchronized (ConnectCheckList) {
+                synchronized (SendMessageList) {
                         //ConnectCheckList.add(String.valueOf(new Date().getTime());
                         //PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
                         //DebugMessage.sendInfoIfDebug("checking connection");
-                        if(ConnectCheckList.size()>3) {
-                            ConnectCheckList.clear();
+                        if(SendMessageList.size()>3) {
+                            SendMessageList.clear();
                             //TODO Call reconnect
                         }
                 }

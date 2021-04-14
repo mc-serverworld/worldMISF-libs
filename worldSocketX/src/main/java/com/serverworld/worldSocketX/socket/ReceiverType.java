@@ -18,18 +18,8 @@
  *
  */
 
-package com.serverworld.worldSocketX.paperspigot.util;
+package com.serverworld.worldSocketX.socket;
 
-import com.serverworld.worldSocket.paperspigot.worldSocket;
-
-public class messager {
-
-    static worldSocket worldsocket;
-    public messager(worldSocket worldSocket){
-        this.worldsocket = worldSocket;
+    public enum ReceiverType {
+        CLIENT,MASTER,CHANNEL,SOCKETSYSTEM
     }
-
-    public static void sendmessage (String message){
-        worldsocket.sendmessage(message);
-    }
-}

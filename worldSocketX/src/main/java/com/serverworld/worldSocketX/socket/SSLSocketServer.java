@@ -94,7 +94,7 @@ public class SSLSocketServer extends Thread {
                         Gson gson = new Gson();
                         LoginMessage loginMessage = gson.fromJson(LoginMessage, com.serverworld.worldSocketX.socket.LoginMessage.class);
                         if (UUIDs.contains(loginMessage.UUID)) {
-                            out.println("ERROR:UUID_USED");
+                            out.println("ERROR::UUID_USED");
                             out.flush();
                             DebugMessage.sendWarring(ChatColor.YELLOW + "Opps! seem some one use the same UUID: " + loginMessage.UUID);
                             return;
@@ -110,26 +110,28 @@ public class SSLSocketServer extends Thread {
                 //-------END LOGIN PROCESS---------
                 while (true) {
                     String input = in.nextLine();
-
+                    Gson gson = new Gson();
+                    MessageObject message = gson.fromJson(input,MessageObject.class);
+                    out.println("CHECK::" + message.getCRC32C());
                     //-------START SOCKET FUNCTION---------
 
                     //Disconnect
                     if (input.equalsIgnoreCase("DISCONNECT"))
                         break;
 
-                        //Connect check
-                    else if (input.equalsIgnoreCase("CONNECTCHECK")) {
-                        out.println("CHECK:ONLINE");
+                    //Connect check
+                    /*else if (input.equalsIgnoreCase("CONNECTCHECK")) {
+                        out.println("CHECK::ONLINE");
                         DebugMessage.sendInfoIfDebug(object.getUUID() + " checking connection");
-                    }
+                    }*/
 
                     //Join channel
-                    else if (input.startsWith("JOIN_CHANNEL:"))
-                        object.addChannel(input.split(":")[1]);//TODO client system v2
+                    else if (input.startsWith("JOIN_CHANNEL::"))
+                        object.addChannel(input.split("::")[1]);//TODO client system v2
 
                         //Leave channel
-                    else if (input.startsWith("LEAVE_CHANNEL:"))
-                        object.removeChannel(input.split(":")[1]);//TODO client system v2
+                    else if (input.startsWith("LEAVE_CHANNEL::"))
+                        object.removeChannel(input.split("::")[1]);//TODO client system v2
 
                         //Get channel list
                     else if (input.equalsIgnoreCase("GET_CHANNELS_LIST"))
