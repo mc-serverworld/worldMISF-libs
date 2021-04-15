@@ -18,11 +18,11 @@
  *
  */
 
-package com.serverworld.worldSocketX.socket;
+package com.serverworld.worldSocketX.api;
 
 import com.serverworld.worldSocketX.config.worldSocketXConfig;
-
-import java.util.UUID;
+import com.serverworld.worldSocketX.socket.MessageObject;
+import com.serverworld.worldSocketX.socket.SSLSocketClient;
 
 /**
  * Message Sender on PaperSpigot side
@@ -35,7 +35,7 @@ public class PaperSender {
      * @param receiver receiver information.
      * @param receiverType type of receiver information.
      */
-    public static void sendMessage(String message, String receiver,ReceiverType receiverType){
+    public static void sendMessage(String message, String receiver, ReceiverType receiverType){
         MessageObject object = null;
         object = new MessageObject(message,worldSocketXConfig.getUUID().toString(), receiver,receiverType);
         /*

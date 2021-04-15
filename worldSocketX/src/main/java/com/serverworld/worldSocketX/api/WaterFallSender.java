@@ -18,8 +18,7 @@
  *
  */
 
-package com.serverworld.worldSocketX.socket;
+package com.serverworld.worldSocketX.api;
 
-    public enum ReceiverType {
-        CLIENT,MASTER,CHANNEL,SOCKETSYSTEM
-    }
+public class WaterFallSender {
+}

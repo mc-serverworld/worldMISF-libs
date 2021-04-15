@@ -20,7 +20,7 @@
 
 package com.serverworld.worldSocketX.socket;
 
-import com.serverworld.worldSocketX.socket.ReceiverType;
+import com.serverworld.worldSocketX.api.ReceiverType;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import lombok.AccessLevel;

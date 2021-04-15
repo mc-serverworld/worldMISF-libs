@@ -23,6 +23,7 @@ package com.serverworld.worldSocketX.socket;
 import com.diogonunes.jcolor.Ansi;
 import com.diogonunes.jcolor.Attribute;
 import com.google.gson.Gson;
+import com.serverworld.worldSocketX.api.ReceiverType;
 import com.serverworld.worldSocketX.config.worldSocketXConfig;
 import com.serverworld.worldSocketX.waterfall.uitls.DebugMessage;
 import net.md_5.bungee.api.ChatColor;
@@ -114,28 +115,33 @@ public class SSLSocketServer extends Thread {
                     MessageObject message = gson.fromJson(input,MessageObject.class);
                     out.println("CHECK::" + message.getCRC32C());
                     //-------START SOCKET FUNCTION---------
+                    if(message.getReceiverType().equals(ReceiverType.SOCKETSYSTEM)){
+                        //Disconnect
+                        if (input.equalsIgnoreCase("DISCONNECT"))
+                            break;
+                        //Connect check
+                        else if(input.equalsIgnoreCase("CheckConnect"))
+                            DebugMessage.sendInfoIfDebug(object.getUUID() + " Check connect");
+                        //Join channel
+                        else if (input.startsWith("JOIN_CHANNEL::"))
+                            object.addChannel(input.split("::")[1]);//TODO client system v2
+                        //Leave channel
+                        else if (input.startsWith("LEAVE_CHANNEL::"))
+                            object.removeChannel(input.split("::")[1]);//TODO client system v2
+                        // Get channel list
+                        else if (input.equalsIgnoreCase("GET_CHANNELS_LIST"))
+                            out.println(object.getChannels());//TODO NEED TEST
 
-                    //Disconnect
-                    if (input.equalsIgnoreCase("DISCONNECT"))
-                        break;
+                    }
 
-                    //Connect check
+
+
+
                     /*else if (input.equalsIgnoreCase("CONNECTCHECK")) {
                         out.println("CHECK::ONLINE");
                         DebugMessage.sendInfoIfDebug(object.getUUID() + " checking connection");
                     }*/
 
-                    //Join channel
-                    else if (input.startsWith("JOIN_CHANNEL::"))
-                        object.addChannel(input.split("::")[1]);//TODO client system v2
-
-                        //Leave channel
-                    else if (input.startsWith("LEAVE_CHANNEL::"))
-                        object.removeChannel(input.split("::")[1]);//TODO client system v2
-
-                        //Get channel list
-                    else if (input.equalsIgnoreCase("GET_CHANNELS_LIST"))
-                        out.println(object.getChannels());//TODO NEED TEST
 
                     //TODO Get client list
 
