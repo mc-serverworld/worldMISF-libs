@@ -131,7 +131,6 @@ public class SSLSocketServer extends Thread {
                         // Get channel list
                         else if (input.equalsIgnoreCase("GET_CHANNELS_LIST"))
                             out.println(object.getChannels());//TODO NEED TEST
-
                     }
 
 
