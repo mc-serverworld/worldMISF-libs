@@ -89,7 +89,7 @@ public class SSLSocketClient {
                             SendMessageList.removeIf(stuff -> stuff.getCRC32C().equals(stgs[1]));
                         }else {
                             /*
-                            JsonParser jsonParser = new JsonParser();
+                            JsonParser jsonParser = new JsonParser();o
                             JsonObject jsonmsg = jsonParser.parse(message).getAsJsonObject();
                             JSONObject json = new JSONObject(message);
                             if(worldsocket.config.debug())
