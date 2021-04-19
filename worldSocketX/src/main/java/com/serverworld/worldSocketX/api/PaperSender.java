@@ -37,7 +37,7 @@ public class PaperSender {
      */
     public static void sendMessage(String message, String receiver, ReceiverType receiverType){
         MessageObject object = null;
-        object = new MessageObject(message,worldSocketXConfig.getUUID().toString(), receiver,receiverType);
+        object = new MessageObject(message,worldSocketXConfig.getUUID().toString(), receiver,receiverType,null);
         /*
         if(receiverType.equals(ReceiverType.CLIENT))
             object = new MessageObject(message,worldSocketXConfig.getUUID().toString(), receiver,receiverType);

@@ -26,6 +26,7 @@ import com.google.common.hash.Hashing;
 import lombok.AccessLevel;
 import lombok.Getter;
 
+import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -33,6 +34,7 @@ import java.util.UUID;
 public class MessageObject {
 
     @Getter(AccessLevel.PUBLIC) private String Message;
+    @Getter(AccessLevel.PUBLIC) private String MessageType;
     @Getter(AccessLevel.PUBLIC) private String Sender;
     @Getter(AccessLevel.PUBLIC) private String Receiver;
     @Getter(AccessLevel.PUBLIC) private ReceiverType ReceiverType;
@@ -45,7 +47,9 @@ public class MessageObject {
         this.Receiver = receiver.toString();
     }*/
 
-    public MessageObject(String Message, String sender, String receiver,ReceiverType receiverType) {
+    public MessageObject(String Message, String sender, String receiver, ReceiverType receiverType, @Nullable String messageType) {
+        this.Message = Message;
+        this.MessageType = messageType;
         this.Sender = sender;
         this.Receiver = receiver;
         this.ReceiverType = receiverType;

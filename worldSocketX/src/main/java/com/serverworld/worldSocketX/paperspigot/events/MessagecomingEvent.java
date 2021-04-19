@@ -22,20 +22,28 @@ package com.serverworld.worldSocketX.paperspigot.events;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.serverworld.worldSocketX.api.ReceiverType;
+import com.serverworld.worldSocketX.socket.MessageObject;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.json.JSONObject;
 
+import java.util.UUID;
+
 public class MessagecomingEvent extends Event{
 
     private static final HandlerList HANDLERS = new HandlerList();
-    final String msg;
+    final MessageObject messageObject;
 
-    private String sender;
-    private String receiver;
-    private String type;
-    private String channel;
-    private String message;
+    @Getter(AccessLevel.PUBLIC) private String Message;
+    @Getter(AccessLevel.PUBLIC) private String Sender;
+    @Getter(AccessLevel.PUBLIC) private String Receiver;
+    @Getter(AccessLevel.PUBLIC) private ReceiverType ReceiverType;
+
+    public UUID getSenderUUID(){ return UUID.fromString(Sender);}
+    public UUID getReceiverUUID(){ return UUID.fromString(Receiver);}
 
     public HandlerList getHandlers() {
         return HANDLERS;
@@ -45,37 +53,11 @@ public class MessagecomingEvent extends Event{
         return HANDLERS;
     }
 
-    public MessagecomingEvent(String msg) {
-        this.msg = msg;
-        JsonParser jsonParser = new JsonParser();
-        JsonObject jsonmsg = jsonParser.parse(msg).getAsJsonObject();
-        JSONObject json = new JSONObject(msg);
-        sender = json.getString("sender");
-        receiver = json.getString("receiver");
-        type = json.getString("type");
-        channel = json.getString("channel");
-        message = json.getString("message");
+    public MessagecomingEvent(MessageObject messageObject) {
+        this.messageObject = messageObject;
+        this.Message = messageObject.getMessage();
+        this.Receiver= messageObject.getReceiver();
+        this.ReceiverType = messageObject.getReceiverType();
+        this.Sender = messageObject.getSender();2
     }
-
-
-    public String getSender() {
-        return this.sender;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
 }
