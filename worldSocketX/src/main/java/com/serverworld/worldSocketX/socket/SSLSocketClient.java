@@ -51,7 +51,7 @@ public class SSLSocketClient {
     //private static Scanner in;
     //private static PrintWriter out;
 
-    static ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
+    //static ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
     private static ConcurrentLinkedQueue<MessageObject> SendMessageList = new ConcurrentLinkedQueue<>();
 
     public void startConnect(){
