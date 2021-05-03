@@ -20,5 +20,24 @@
 
 package com.serverworld.worldSocketX.socket;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Class will be create when client want to join no man channel.
+ */
 public class ChannelObject {
+    /**
+     * Return ChannelName.
+     */
+    @Getter(AccessLevel.PUBLIC) private String ChannelName;
+    @Getter(AccessLevel.PUBLIC) private Set<ClientObject> Clients = new HashSet<>();
+
+    public void addClient(ClientObject clientObject){
+        if(!Clients.contains(clientObject))
+            this.Clients.add(clientObject);
+    }
 }

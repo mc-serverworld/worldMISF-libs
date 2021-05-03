@@ -39,6 +39,7 @@ import java.util.concurrent.Executors;
 public class SSLSocketServer extends Thread {
     static ConcurrentLinkedQueue<String> MessagesQueue = new ConcurrentLinkedQueue<String>();
     private static Set<ClientObject> Clients = new HashSet<>();
+    private static Set<ChannelObject> Channels = new HashSet<>();
     private static Set<UUID> UUIDs = new HashSet<>();
     //private sender sender;
     //private static Set<String> names = new HashSet<>();
@@ -123,7 +124,12 @@ public class SSLSocketServer extends Thread {
                         else if(input.equalsIgnoreCase("CheckConnect"))
                             DebugMessage.sendInfoIfDebug(object.getUUID() + " Check connect");
                         //Join channel
-                        else if (input.startsWith("JOIN_CHANNEL::"))
+                        else if (input.startsWith("JOIN_CHANNEL::")){
+                            for (ChannelObject stuff: Channels) {
+                                if(stuff.getChannelName().equalsIgnoreCase(input.split("::")[1]))
+                                    stuff.
+                            }
+                        }
                             object.addChannel(input.split("::")[1]);//TODO client system v2
                         //Leave channel
                         else if (input.startsWith("LEAVE_CHANNEL::"))
