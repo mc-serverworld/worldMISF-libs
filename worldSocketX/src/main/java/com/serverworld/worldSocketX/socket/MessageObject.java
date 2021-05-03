@@ -28,6 +28,7 @@ import lombok.Getter;
 
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -38,6 +39,7 @@ public class MessageObject {
     @Getter(AccessLevel.PUBLIC) private String Sender;
     @Getter(AccessLevel.PUBLIC) private String Receiver;
     @Getter(AccessLevel.PUBLIC) private ReceiverType ReceiverType;
+    @Getter(AccessLevel.PUBLIC) private Long Time;
 
     public UUID getSenderUUID(){ return UUID.fromString(Sender);}
     public UUID getReceiverUUID(){ return UUID.fromString(Receiver);}
@@ -53,10 +55,11 @@ public class MessageObject {
         this.Sender = sender;
         this.Receiver = receiver;
         this.ReceiverType = receiverType;
+        this.Time = System.currentTimeMillis();
     }
 
     public HashCode getCRC32C(){
-        return Hashing.crc32c().hashString(Message, StandardCharsets.UTF_8);
+        return Hashing.crc32c().hashString(Message+Time, StandardCharsets.UTF_8);
     }
 
 }

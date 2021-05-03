@@ -173,8 +173,8 @@ public class SSLSocketClient {
                 synchronized (SendMessageList) {
                         //ConnectCheckList.add(String.valueOf(new Date().getTime());
                         //PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
-                        //DebugMessage.sendInfoIfDebug("checking connection");
-                        if(SendMessageList.size()>3) {
+                        //DebugMessage.sendInoIfDebug("checking connection");
+                        if(SendMessageList.size()>10) {
                             SendMessageList.clear();
                             //TODO Call reconnect
                         }
