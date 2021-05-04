@@ -30,14 +30,30 @@ import java.util.Set;
  * Class will be create when client want to join no man channel.
  */
 public class ChannelObject {
+
     /**
      * Return ChannelName.
      */
     @Getter(AccessLevel.PUBLIC) private String ChannelName;
+
+    /**
+     * Return clients in channel.
+     */
     @Getter(AccessLevel.PUBLIC) private Set<ClientObject> Clients = new HashSet<>();
 
+    /**
+     * Return clients in channel.
+     */
     public void addClient(ClientObject clientObject){
         if(!Clients.contains(clientObject))
             this.Clients.add(clientObject);
     }
+
+    /**
+     * Remove client in channel.
+     */
+    public void removeClient(ClientObject clientObject){
+            this.Clients.removeIf(stuff -> stuff.equals(clientObject));
+    }
+
 }
