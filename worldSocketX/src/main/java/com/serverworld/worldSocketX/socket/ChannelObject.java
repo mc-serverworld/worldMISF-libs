@@ -42,7 +42,7 @@ public class ChannelObject {
     @Getter(AccessLevel.PUBLIC) private Set<ClientObject> Clients = new HashSet<>();
 
     /**
-     * Return clients in channel.
+     * Add clinet to channel.
      */
     public void addClient(ClientObject clientObject){
         if(!Clients.contains(clientObject))

@@ -43,30 +43,26 @@ public class ClientObject {
      * Return Unique ID of client.
      */
     @Getter(AccessLevel.PUBLIC) private UUID UUID;
+
     //@Getter(AccessLevel.PUBLIC) private UUID ProxyUUID;
+
     /**
      * Return Socket(SSLSocket) of client.
      */
     @Getter(AccessLevel.PUBLIC) private SSLSocket Socket;
+
     /**
      * Return Printer of client.
      */
     @Getter(AccessLevel.PUBLIC) private PrintWriter Printer;
+
     /**
      * Set/Get Channels of client.
      */
     @Setter(AccessLevel.PUBLIC) @Getter(AccessLevel.PUBLIC) private ArrayList<String> Channels;
+
     /**
      * Return ProtocolVersion of client.
      */
     @Getter(AccessLevel.PUBLIC) private int ProtocolVersion;
-
-    public void addChannel(String channel){//add listen channel
-        Channels.add(channel);
-    }
-    public void removeChannel(String channel){//add listen channel
-        Channels.remove(channel);
-    }
-    public void reSet(String channel){//add listen channel
-        Channels.clear(); }
 }
