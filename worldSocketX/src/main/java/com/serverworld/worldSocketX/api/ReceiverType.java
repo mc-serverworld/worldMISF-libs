@@ -20,6 +20,24 @@
 
 package com.serverworld.worldSocketX.api;
 
+/**
+ * Send message via proved param.
+ */
     public enum ReceiverType {
-        CLIENT,MASTER,CHANNEL,SOCKETSYSTEM
+    /**
+     * Receiver is other client.
+     */
+    CLIENT,
+    /**
+     * Receiver is socket server.
+     */
+    MASTER,
+    /**
+     * Receivers are client in channel.
+     */
+    CHANNEL,
+    /**
+     * Socket command system message.
+     */
+    SOCKETSYSTEM
     }
