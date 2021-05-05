@@ -31,6 +31,14 @@ import java.util.Set;
  */
 public class ChannelObject {
 
+
+    /**
+     * Create new channel.
+     * @param ChannelName Name of channel.
+     */
+    public ChannelObject(String ChannelName){
+        this.ChannelName = ChannelName;
+    }
     /**
      * Return ChannelName.
      */

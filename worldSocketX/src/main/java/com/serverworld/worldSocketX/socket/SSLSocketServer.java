@@ -117,29 +117,43 @@ public class SSLSocketServer extends Thread {
                     out.println("CHECK::" + message.getCRC32C());
                     //-------START SOCKET FUNCTION---------
                     if(message.getReceiverType().equals(ReceiverType.SOCKETSYSTEM)){
+
                         //Disconnect
                         if (input.equalsIgnoreCase("DISCONNECT"))
                             break;
+
                         //Connect check
                         else if(input.equalsIgnoreCase("CheckConnect"))
                             DebugMessage.sendInfoIfDebug(object.getUUID() + " Check connect");
+
                         //Join channel
                         else if (input.startsWith("JOIN_CHANNEL::")){
-                            for (ChannelObject stuff: Channels) {
-                                if(stuff.getChannelName().equalsIgnoreCase(input.split("::")[1]))
-                                    stuff.
+                            String channelName = input.split("::")[1];
+                            if(hasChannel(channelName)) {
+                                for (ChannelObject stuff : Channels)
+                                    if (stuff.getChannelName().equalsIgnoreCase(channelName))
+                                        stuff.addClient(object);
+                            }else{
+                                ChannelObject newChannel = new ChannelObject(channelName);
+                                newChannel.addClient(object);
+                                Channels.add(newChannel);
                             }
                         }
-                            object.addChannel(input.split("::")[1]);//TODO client system v2
+
                         //Leave channel
-                        else if (input.startsWith("LEAVE_CHANNEL::"))
-                            object.removeChannel(input.split("::")[1]);//TODO client system v2
-                        // Get channel list
+                        else if (input.startsWith("LEAVE_CHANNEL::")){
+                            String channelName = input.split("::")[1];
+                            for (ChannelObject stuff : Channels){
+                                if (stuff.getChannelName().equalsIgnoreCase(channelName))
+                                    stuff.removeClient(object);
+                            }
+                            Channels.removeIf(stuff -> stuff.getClients().isEmpty());
+                        }
+
+                        //TODO Get channel list
                         else if (input.equalsIgnoreCase("GET_CHANNELS_LIST"))
-                            out.println(object.getChannels());//TODO NEED TEST
+                            out.println("");
                     }
-
-
 
 
                     /*else if (input.equalsIgnoreCase("CONNECTCHECK")) {
@@ -210,6 +224,8 @@ public class SSLSocketServer extends Thread {
         }
         //End run
     }
+
+
     /*public void sendmessage(String message){
         MessagesQueue.add(message);
         sender = new sender();
@@ -237,4 +253,10 @@ public class SSLSocketServer extends Thread {
             }
         }
     }*/
+    private static boolean hasChannel(String name){
+        for (ChannelObject stuff:Channels)
+            if(stuff.getChannelName().equalsIgnoreCase(name))
+                return true;
+        return false;
+    }
 }
